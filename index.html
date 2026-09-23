@@ -63,6 +63,11 @@ button:disabled{opacity:1}
     <div class="answers" id="answers"></div>
     <div class="feedback" id="feedback"></div>
     <button class="next" id="next" style="display:none">Next note →</button>
+    <div style="text-align:center;margin-top:8px">
+      <button id="reset" type="button" style="background:transparent;font-size:12px;color:#777;padding:5px 8px">
+        Reset progress
+      </button>
+    </div>
   </div>
 </div>
 
@@ -70,11 +75,41 @@ button:disabled{opacity:1}
 "use strict";
 
 const SOL = ["Do","Re","Mi","Fa","Sol","La","Ti"];
+const STORAGE_KEY = "maddy-do-re-mi-trainer-v1";
+const FAST_LIMIT = 1800; // milliseconds; used for mastery, not shown to Maddy
+
+const blank = () => ({
+  skill:{treble:Array(7).fill(0),bass:Array(7).fill(0)},
+  misses:{treble:Array(7).fill(0),bass:Array(7).fill(0)},
+  fast:{treble:Array(7).fill(0),bass:Array(7).fill(0)}
+});
+
 const state = {
   current:null, streak:0, correct:0, total:0,
-  skill:{treble:Array(7).fill(0),bass:Array(7).fill(0)},
-  misses:{treble:Array(7).fill(0),bass:Array(7).fill(0)}
+  startedAt:0,
+  ...blank()
 };
+
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    streak:state.streak, correct:state.correct, total:state.total,
+    skill:state.skill, misses:state.misses, fast:state.fast
+  }));
+}
+
+function load(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+    if(!saved)return;
+    state.streak=saved.streak||0;
+    state.correct=saved.correct||0;
+    state.total=saved.total||0;
+    if(saved.skill)state.skill=saved.skill;
+    if(saved.misses)state.misses=saved.misses;
+    if(saved.fast)state.fast=saved.fast;
+  }catch(e){}
+}
+load();
 
 function cards(){
   const a=[];
@@ -85,7 +120,12 @@ function cards(){
 
 function choose(){
   const a=cards();
-  const w=a.map(c=>1+state.misses[c.staff][c.i]*5+Math.max(0,4-state.skill[c.staff][c.i])*2);
+  const w=a.map(c=>
+    1 +
+    state.misses[c.staff][c.i]*5 +
+    Math.max(0,4-state.skill[c.staff][c.i])*2 +
+    Math.max(0,4-state.fast[c.staff][c.i])*2
+  );
   let r=Math.random()*w.reduce((x,y)=>x+y,0);
   for(let i=0;i<a.length;i++){r-=w[i];if(r<=0)return a[i]}
   return a[0];
@@ -100,52 +140,72 @@ function choose(){
   - only ONE note is highlighted/played at a time
 */
 function staffSvg(staff,i){
-  const treble=[48,60,72,84,96];
-  const bass=[119,131,143,155,167];
+  /*
+    TRUE GRAND STAFF:
+      Treble staff = five lines, with its own vertical space.
+      Bass staff   = five lines, with its own vertical space.
+      A visible gap separates the two staves.
+      The brace spans both staves, and each clef belongs to its own staff.
+  */
+  const treble = [42,52,62,72,82];
+  const bass   = [116,126,136,146,156];
 
-  // Solfège positions used by the supplied flashcards:
-  // Treble: Do below the staff, Re below the staff, Mi bottom line,
-  //         Fa first space, Sol second line, La second space, Ti third line.
-  // Bass:   Do second space from bottom, Re third line, Mi third space,
-  //         Fa fourth line, Sol top line, La above, Ti above.
-  const trebleY = 96-(i-2)*6;
-  const bassY   = 119+(4-i)*6;
+  // The seven notes are consecutive scale positions.
+  // Treble: Mi = bottom line; Fa = space; Sol = line; La = space; Ti = line;
+  //         Re and Do continue downward with ledger lines.
+  // Bass:   Sol = top line; Fa = line below; Mi = space; Re = line; Do = space.
+  const trebleY = 82 - (i-2)*5;
+  const bassY   = 141 - i*5;
   const y = staff==="treble" ? trebleY : bassY;
 
-  const lineSvg = ys => ys.map(v =>
-    `<line x1="145" y1="${v}" x2="685" y2="${v}" stroke="#222" stroke-width="2"/>`
+  const lines = ys => ys.map(v =>
+    `<line x1="150" y1="${v}" x2="685" y2="${v}"
+           stroke="#222" stroke-width="2"/>`
   ).join("");
 
-  let ledger="";
-  if(staff==="treble" && i<2) ledger=`<line x1="124" y1="${y}" x2="166" y2="${y}" stroke="#222" stroke-width="2"/>`;
-  if(staff==="bass" && i>4) ledger=`<line x1="124" y1="${y}" x2="166" y2="${y}" stroke="#222" stroke-width="2"/>`;
+  let ledger = "";
+  if(staff==="treble" && i<2){
+    // Do and Re are below the treble staff.
+    ledger = `<line x1="132" y1="${y}" x2="168" y2="${y}"
+                    stroke="#222" stroke-width="2"/>`;
+  }
+  if(staff==="bass" && i>4){
+    // La and Ti are above the bass staff.
+    ledger = `<line x1="132" y1="${y}" x2="168" y2="${y}"
+                    stroke="#222" stroke-width="2"/>`;
+  }
 
   const note = `
-    <ellipse cx="370" cy="${y}" rx="15" ry="10" fill="#222" transform="rotate(-18 370 ${y})"/>
+    <ellipse cx="380" cy="${y}" rx="15" ry="10"
+             fill="#222" transform="rotate(-18 380 ${y})"/>
     ${staff==="treble"
-      ? `<line x1="384" y1="${y}" x2="384" y2="${y-45}" stroke="#222" stroke-width="3"/>`
-      : `<line x1="356" y1="${y}" x2="356" y2="${y+45}" stroke="#222" stroke-width="3"/>`
+      ? `<line x1="394" y1="${y}" x2="394" y2="${y-43}"
+               stroke="#222" stroke-width="3"/>`
+      : `<line x1="366" y1="${y}" x2="366" y2="${y+43}"
+               stroke="#222" stroke-width="3"/>`
     }`;
 
-  return `<svg viewBox="0 0 720 205" aria-label="Grand staff">
-    ${lineSvg(treble)}
-    ${lineSvg(bass)}
+  return `<svg viewBox="0 0 720 190" aria-label="Grand staff">
+    ${lines(treble)}
+    ${lines(bass)}
 
-    <!-- Treble clef -->
-    <text x="65" y="91" font-size="78" font-family="serif">𝄞</text>
+    <!-- One treble clef, aligned with the treble staff -->
+    <text x="67" y="79" font-size="78" font-family="serif">𝄞</text>
 
-    <!-- Bass clef -->
-    <text x="65" y="164" font-size="72" font-family="serif">𝄢</text>
+    <!-- One bass clef, aligned with the bass staff -->
+    <text x="67" y="155" font-size="72" font-family="serif">𝄢</text>
+
+    <!-- Grand-staff brace -->
+    <path d="M45 35
+             C27 43 27 58 43 76
+             C28 91 28 107 43 123
+             C27 141 27 158 45 164"
+          fill="none" stroke="#333" stroke-width="3"/>
 
     ${ledger}
     ${note}
-
-    <!-- Subtle brace -->
-    <path d="M42 40 C28 45 28 72 42 103 C28 134 28 163 42 170"
-          fill="none" stroke="#444" stroke-width="2.5"/>
   </svg>`;
 }
-
 function renderStats(){
   document.getElementById("streak").textContent=state.streak;
   document.getElementById("accuracy").textContent=state.total
@@ -153,7 +213,8 @@ function renderStats(){
 
   let mastered=0;
   for(const staff of ["treble","bass"])
-    for(const v of state.skill[staff]) if(v>=4) mastered++;
+    for(let i=0;i<7;i++)
+      if(state.skill[staff][i]>=4 && state.fast[staff][i]>=4) mastered++;
 
   document.getElementById("mastered").textContent=mastered+"/14";
   document.getElementById("fill").style.width=(mastered/14*100)+"%";
@@ -165,9 +226,15 @@ function next(){
     state.current.staff,state.current.i
   );
 
-  document.getElementById("answers").innerHTML=SOL.map(
+  const choices=[...SOL];
+  for(let j=choices.length-1;j>0;j--){
+    const k=Math.floor(Math.random()*(j+1));
+    [choices[j],choices[k]]=[choices[k],choices[j]];
+  }
+  document.getElementById("answers").innerHTML=choices.map(
     n=>`<button type="button" data-answer="${n}">${n}</button>`
   ).join("");
+  state.startedAt=performance.now();
 
   document.querySelectorAll("#answers button").forEach(btn=>{
     btn.addEventListener("click",()=>answer(btn.dataset.answer));
@@ -184,6 +251,7 @@ function answer(given){
   buttons.forEach(b=>b.disabled=true);
 
   state.total++;
+  const responseMs=performance.now()-state.startedAt;
 
   if(given===target){
     state.correct++;
@@ -191,6 +259,15 @@ function answer(given){
     state.skill[state.current.staff][state.current.i]=Math.min(
       4,state.skill[state.current.staff][state.current.i]+1
     );
+    if(responseMs<=FAST_LIMIT){
+      state.fast[state.current.staff][state.current.i]=Math.min(
+        4,state.fast[state.current.staff][state.current.i]+1
+      );
+    }else{
+      state.fast[state.current.staff][state.current.i]=Math.max(
+        0,state.fast[state.current.staff][state.current.i]-1
+      );
+    }
     document.getElementById("feedback").innerHTML=`✓ <b>${target}</b>!`;
   }else{
     state.streak=0;
@@ -198,6 +275,7 @@ function answer(given){
     state.skill[state.current.staff][state.current.i]=Math.max(
       0,state.skill[state.current.staff][state.current.i]-1
     );
+    state.fast[state.current.staff][state.current.i]=0;
     document.getElementById("feedback").innerHTML=
       `Not quite — it was <b>${target}</b>.`;
   }
@@ -208,10 +286,20 @@ function answer(given){
   });
 
   document.getElementById("next").style.display="block";
+  save();
   renderStats();
 }
 
 document.getElementById("next").addEventListener("click",next);
+document.getElementById("reset").addEventListener("click",()=>{
+  if(confirm("Reset Maddy's practice progress?")){
+    localStorage.removeItem(STORAGE_KEY);
+    state.streak=state.correct=state.total=0;
+    const fresh=blank();
+    state.skill=fresh.skill; state.misses=fresh.misses; state.fast=fresh.fast;
+    next();
+  }
+});
 next();
 </script>
 </body>
