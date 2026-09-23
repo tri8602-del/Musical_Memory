@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Maddy's Do-Re-Mi Note Trainer</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f4f1;color:#222;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{width:min(720px,100%);margin:auto;padding:16px}
+h1{font-size:28px;margin:4px 0}.sub{color:#666;margin:0 0 14px}
+.panel{background:white;border-radius:22px;padding:16px;box-shadow:0 4px 18px #0001}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
+.stat{background:#eee;border-radius:13px;text-align:center;padding:8px 3px}.stat b{display:block;font-size:22px}.stat small{color:#666}
+.staff{border:1px solid #ddd;border-radius:17px;padding:7px;background:#fff}
+svg{display:block;width:100%;height:auto}
+.prompt{text-align:center;font-size:20px;font-weight:700;margin:13px 0}
+.answers{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+button{border:0;border-radius:14px;padding:14px 8px;font-size:18px;font-weight:700;background:#e9e9e9;touch-action:manipulation}
+button:active{transform:scale(.97)}
+.answers button.correct{background:#cde7cf}.answers button.wrong{background:#f2cfcc}
+.feedback{text-align:center;min-height:32px;font-size:18px;font-weight:700;padding:10px 0}
+.next{width:100%;background:#222;color:white;margin-top:4px}
+.progress{margin:10px 0 2px}.bar{height:10px;background:#e5e5e5;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:#f28c28;transition:width .25s}
+.note-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px}
+.note-dot{border-radius:9px;background:#eee;padding:6px 2px;text-align:center;font-size:12px}
+.note-dot strong{display:block;font-size:14px}.note-dot.done{background:#d7ead8}
+.help{font-size:13px;color:#777;text-align:center;margin-top:12px}
+@media(max-width:500px){.answers{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>🎹 Maddy's Do-Re-Mi Trainer</h1>
+<p class="sub">Both staffs. No letter names. The goal is instant recognition.</p>
+<div class="panel">
+  <div class="stats">
+    <div class="stat"><b id="streak">0</b><small>streak</small></div>
+    <div class="stat"><b id="accuracy">—</b><small>accuracy</small></div>
+    <div class="stat"><b id="mastered">0/14</b><small>mastered</small></div>
+    <div class="stat"><b id="session">0</b><small>this session</small></div>
+  </div>
+
+  <div class="progress"><div class="bar"><div class="fill" id="fill"></div></div></div>
+
+  <div class="staff" id="staff"></div>
+  <div class="prompt">What note name is that?</div>
+  <div class="answers" id="answers"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next" id="next" style="display:none">Next note →</button>
+
+  <div class="note-grid" id="noteGrid"></div>
+  <div class="help">A note becomes “mastered” after repeated correct answers with no recent misses. Missed notes are deliberately shown more often.</div>
+</div>
+</div>
+
+<script>
+"use strict";
+
+const SOL = ["Do","Re","Mi","Fa","Sol","La","Ti"];
+const idx = {Do:0,Re:1,Mi:2,Fa:3,Sol:4,La:5,Ti:6};
+const state = {
+  current:null, streak:0, correct:0, total:0, session:0,
+  skill:{treble:[0,0,0,0,0,0,0],bass:[0,0,0,0,0,0,0]},
+  misses:{treble:[0,0,0,0,0,0,0],bass:[0,0,0,0,0,0,0]}
+};
+
+function allCards(){
+  const a=[];
+  ["treble","bass"].forEach(staff=>{
+    for(let i=0;i<7;i++) a.push({staff,i});
+  });
+  return a;
+}
+function choose(){
+  const cards=allCards();
+  const weights=cards.map(c=>{
+    const s=state.skill[c.staff][c.i], m=state.misses[c.staff][c.i];
+    return 1 + m*5 + Math.max(0,4-s)*2;
+  });
+  let r=Math.random()*weights.reduce((a,b)=>a+b,0);
+  for(let i=0;i<cards.length;i++){r-=weights[i];if(r<=0)return cards[i]}
+  return cards[0];
+}
+
+/* Grand staff. The note always belongs to either the treble or bass staff,
+   but Maddy always sees the complete grand staff. */
+function staffSvg(staff,i){
+  const top=52, gap=11, bottom=96;
+  const trebleLines=[52,63,74,85,96];
+  const bassLines=[111,122,133,144,155];
+
+  // Solfege positions: Do=C, Re=D, Mi=E, Fa=F, Sol=G, La=A, Ti=B.
+  // Treble: Mi is bottom line; each step moves 5.5px upward.
+  // Bass: Sol is top line; each step moves 5.5px upward.
+  const trebleY = 96 - (i-2)*5.5;
+  const bassY = 111 + (4-i)*5.5;
+
+  const y = staff==="treble" ? trebleY : bassY;
+  const lines = [...trebleLines,...bassLines].map(y=>`<line x1="125" y1="${y}" x2="655" y2="${y}" stroke="#222" stroke-width="2"/>`).join("");
+
+  const trebleLedger = (staff==="treble" && i<2) ? `<line x1="105" y1="${trebleY}" x2="145" y2="${trebleY}" stroke="#222" stroke-width="2"/>` : "";
+  const bassLedger = (staff==="bass" && i>4) ? `<line x1="105" y1="${bassY}" x2="145" y2="${bassY}" stroke="#222" stroke-width="2"/>` : "";
+
+  // Highlight the active note while leaving the rest of the grand staff visible.
+  return `<svg viewBox="0 0 700 205" aria-label="Grand staff with a ${SOL[i]} note">
+    <text x="52" y="91" font-size="82" font-family="serif">𝄞</text>
+    <text x="52" y="157" font-size="78" font-family="serif">𝄢</text>
+    ${lines}
+    ${trebleLedger}${bassLedger}
+    <ellipse cx="335" cy="${y}" rx="15" ry="10" fill="#222" transform="rotate(-18 335 ${y})"/>
+    ${staff==="treble" ? `<line x1="348" y1="${y}" x2="348" y2="${y-43}" stroke="#222" stroke-width="3"/>`
+                         : `<line x1="322" y1="${y}" x2="322" y2="${y+43}" stroke="#222" stroke-width="3"/>`}
+    <text x="545" y="29" font-size="13" fill="#888">TREBLE</text>
+    <text x="545" y="105" font-size="13" fill="#888">BASS</text>
+  </svg>`;
+}
+
+function renderGrid(){
+  let html="";
+  ["treble","bass"].forEach(staff=>{
+    for(let i=0;i<7;i++){
+      const v=state.skill[staff][i];
+      const done=v>=4;
+      html += `<div class="note-dot ${done?'done':''}" title="${staff} ${SOL[i]}">
+        <strong>${SOL[i]}</strong><span>${staff[0].toUpperCase()} · ${v}/4</span>
+      </div>`;
+    }
+  });
+  document.getElementById("noteGrid").innerHTML=html;
+}
+
+function renderStats(){
+  document.getElementById("streak").textContent=state.streak;
+  document.getElementById("accuracy").textContent=state.total ? Math.round(state.correct/state.total*100)+"%" : "—";
+  let mastered=0;
+  ["treble","bass"].forEach(s=>state.skill[s].forEach(v=>{if(v>=4)mastered++}));
+  document.getElementById("mastered").textContent=mastered+"/14";
+  document.getElementById("session").textContent=state.session;
+  document.getElementById("fill").style.width=(mastered/14*100)+"%";
+  renderGrid();
+}
+
+function next(){
+  state.current=choose();
+  document.getElementById("staff").innerHTML=staffSvg(state.current.staff,state.current.i);
+  document.getElementById("answers").innerHTML=SOL.map(n=>`<button data-answer="${n}">${n}</button>`).join("");
+  document.querySelectorAll("#answers button").forEach(btn=>{
+    btn.addEventListener("click",()=>answer(btn.dataset.answer));
+  });
+  document.getElementById("feedback").textContent="";
+  document.getElementById("next").style.display="none";
+  renderStats();
+}
+
+function answer(given){
+  if(!state.current)return;
+  const buttons=[...document.querySelectorAll("#answers button")];
+  buttons.forEach(b=>b.disabled=true);
+
+  const target=SOL[state.current.i];
+  const right=given===target;
+  state.total++; state.session++;
+
+  if(right){
+    state.correct++; state.streak++;
+    state.skill[state.current.staff][state.current.i]=Math.min(4,state.skill[state.current.staff][state.current.i]+1);
+    document.getElementById("feedback").innerHTML="✓ <b>"+target+"</b>!";
+  }else{
+    state.streak=0;
+    state.misses[state.current.staff][state.current.i]++;
+    state.skill[state.current.staff][state.current.i]=Math.max(0,state.skill[state.current.staff][state.current.i]-1);
+    document.getElementById("feedback").innerHTML="Not quite — it was <b>"+target+"</b>.";
+  }
+
+  buttons.forEach(b=>{
+    if(b.dataset.answer===target)b.classList.add("correct");
+    if(b.dataset.answer===given && !right)b.classList.add("wrong");
+  });
+  document.getElementById("next").style.display="block";
+  renderStats();
+}
+
+document.getElementById("next").addEventListener("click",next);
+next();
+</script>
+</body>
+</html>
