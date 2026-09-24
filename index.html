@@ -187,6 +187,150 @@ button:disabled{opacity:1}
   letter-spacing:1.2px;
   text-transform:uppercase;
 }
+
+.feedback-result{font-size:18px;font-weight:800}
+.correct-result{color:#287044}
+.wrong-result{color:#a13e3e}
+.correct-answer{font-size:18px;font-weight:800;margin-top:3px;color:#4a4257}
+.mnemonic{font-size:15px;margin-top:5px;color:#7357d9;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+
+/* Responsive layout: landscape gets a side-by-side workspace; portrait stays
+   intentionally simple. Uses dynamic viewport units so browser chrome is
+   accounted for on phones/tablets. */
+html,body{width:100%;min-height:100%;overflow-x:hidden}
+button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+
+@media (min-width:700px) and (orientation:landscape){
+  body{min-height:100dvh}
+  .app{
+    width:min(1200px,calc(100vw - 24px));
+    height:100dvh;
+    min-height:0;
+    padding:8px 12px 12px;
+    display:flex;
+    flex-direction:column;
+  }
+  h1{
+    flex:0 0 auto;
+    font-size:clamp(25px,3vw,34px);
+    margin:0 0 7px;
+  }
+  .panel{
+    flex:1 1 auto;
+    min-height:0;
+    display:grid;
+    grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+    grid-template-rows:auto auto minmax(0,1fr) auto auto;
+    column-gap:18px;
+    row-gap:0;
+    padding:12px 14px;
+  }
+  .stats{grid-column:1 / -1;grid-row:1;margin:0 0 7px}
+  .progress{grid-column:1 / -1;grid-row:2;margin:0 3px 8px}
+  .note-card{
+    grid-column:1;
+    grid-row:3 / 6;
+    min-height:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .note-card img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
+  .prompt{
+    grid-column:2;
+    grid-row:3;
+    align-self:end;
+    margin:0 0 8px;
+    font-size:clamp(18px,2vw,22px);
+  }
+  .answers{
+    grid-column:2;
+    grid-row:4;
+    align-self:center;
+    gap:8px;
+  }
+  .answers button{padding:12px 7px;font-size:17px}
+  .feedback{
+    grid-column:2;
+    grid-row:5;
+    min-height:0;
+    padding:6px 0 2px;
+    align-self:start;
+  }
+  .next{
+    grid-column:2;
+    grid-row:6;
+    margin-top:4px;
+  }
+  .reset{
+    grid-column:2;
+    grid-row:7;
+    margin:3px auto 0;
+  }
+}
+
+/* Short landscape screens (laptops and phones in landscape). */
+@media (min-width:700px) and (orientation:landscape) and (max-height:700px){
+  .app{padding-top:4px;padding-bottom:7px}
+  h1{font-size:25px;margin-bottom:4px}
+  .panel{padding:8px 10px;column-gap:12px}
+  .stats{gap:7px;margin-bottom:4px}
+  .stat{padding:5px 9px}
+  .stat b{font-size:19px}
+  .progress{height:7px;margin-bottom:5px}
+  .prompt{font-size:18px;margin-bottom:5px}
+  .answers{gap:6px}
+  .answers button{padding:9px 5px;font-size:15px}
+  .feedback{font-size:15px;padding:3px 0 0}
+  .feedback-result,.correct-answer{font-size:15px}
+  .mnemonic{font-size:13px}
+  .next{padding:9px 8px;font-size:16px}
+  .reset{font-size:11px;padding:2px 6px}
+}
+
+/* Keep the portrait phone layout comfortably inside the safe area so the
+   bottom browser gesture/menu doesn't sit underneath the Next button. */
+@media (max-width:560px) and (orientation:portrait){
+  .app{
+    width:100%;
+    min-height:100dvh;
+    padding:
+      max(8px,env(safe-area-inset-top))
+      8px
+      max(28px,calc(24px + env(safe-area-inset-bottom)));
+  }
+  h1{font-size:clamp(23px,7vw,29px);margin:0 0 9px}
+  .panel{padding:10px;border-radius:21px}
+  .note-card{border-radius:17px}
+  .prompt{font-size:19px;margin:10px 0 8px}
+  .answers{gap:7px}
+  .answers button{padding:11px 6px;font-size:17px;min-height:48px}
+  .feedback{font-size:16px;padding:7px 0 4px}
+  .feedback-result,.correct-answer{font-size:16px}
+  .mnemonic{font-size:13px;letter-spacing:.9px}
+  .next{margin-top:2px;min-height:48px}
+  .reset{margin:7px auto 0}
+}
+
+/* Very short portrait screens: trim decorative spacing rather than forcing
+   the user to scroll to reach Next. */
+@media (max-width:560px) and (orientation:portrait) and (max-height:700px){
+  h1{font-size:23px;margin-bottom:6px}
+  .panel{padding:8px}
+  .stats{margin-bottom:7px}
+  .stat{padding:6px 4px}
+  .stat b{font-size:19px}
+  .progress{height:7px;margin-bottom:8px}
+  .prompt{margin:7px 0 6px;font-size:18px}
+  .answers{gap:6px}
+  .answers button{min-height:44px;padding:8px 5px;font-size:16px}
+  .feedback{padding:5px 0 2px}
+  .next{min-height:44px}
+}
 </style></head><body><div class="app"><h1>Maddy's Do-Re-Mi Trainer</h1><div class="panel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/23</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><button class="reset" id="reset" type="button">Reset progress</button></div></div><script>
 "use strict";
 
@@ -277,59 +421,59 @@ function next(){
 }
 
 let audioCtx=null;
-
-function playNote(card){
+function getAudio(){
   const AC=window.AudioContext||window.webkitAudioContext;
-  if(!AC)return;
+  if(!AC)return null;
   if(!audioCtx)audioCtx=new AC();
   if(audioCtx.state==="suspended")audioCtx.resume();
-
-  const freq=440*Math.pow(2,(card.midi-69)/12);
-  const now=audioCtx.currentTime;
-
-  const master=audioCtx.createGain();
+  return audioCtx;
+}
+function playCorrectNote(card){
+  const ctx=getAudio(); if(!ctx)return;
+  const freq=440*Math.pow(2,(card.midi-69)/12), now=ctx.currentTime;
+  const master=ctx.createGain();
   master.gain.setValueAtTime(0.0001,now);
   master.gain.exponentialRampToValueAtTime(0.24,now+0.012);
   master.gain.exponentialRampToValueAtTime(0.09,now+0.18);
   master.gain.exponentialRampToValueAtTime(0.0001,now+0.95);
-  master.connect(audioCtx.destination);
-
-  [[1,0.85],[2,0.18],[3,0.07],[4,0.03]].forEach(([multiple,level])=>{
-    const osc=audioCtx.createOscillator();
-    const gain=audioCtx.createGain();
-    osc.type="sine";
-    osc.frequency.value=freq*multiple;
-    gain.gain.value=level;
-    osc.connect(gain);
-    gain.connect(master);
-    osc.start(now);
-    osc.stop(now+1.0);
+  master.connect(ctx.destination);
+  [[1,0.85],[2,0.18],[3,0.07],[4,0.03]].forEach(([m,l])=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type="sine"; o.frequency.value=freq*m; g.gain.value=l;
+    o.connect(g);g.connect(master);o.start(now);o.stop(now+1.0);
   });
 }
-
+function playMissSound(){
+  const ctx=getAudio(); if(!ctx)return;
+  const now=ctx.currentTime,g=ctx.createGain(),o=ctx.createOscillator();
+  g.gain.setValueAtTime(0.0001,now);
+  g.gain.exponentialRampToValueAtTime(0.16,now+0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001,now+0.20);
+  g.connect(ctx.destination);
+  o.type="square";
+  o.frequency.setValueAtTime(180,now);
+  o.frequency.exponentialRampToValueAtTime(95,now+0.18);
+  o.connect(g);o.start(now);o.stop(now+0.21);
+}
 function answer(given){
-  const card=CARDS[state.current];
-  const target=card.sol;
+  const card=CARDS[state.current], target=card.sol;
   const buttons=[...document.querySelectorAll("#answers button")];
   buttons.forEach(b=>b.disabled=true);
-
   state.total++;
   const responseMs=performance.now()-state.startedAt;
+  const isCorrect=given===target;
 
-  if(given===target){
-    state.correct++;
-    state.streak++;
+  if(isCorrect){
+    state.correct++; state.streak++;
     state.skill[state.current]=Math.min(4,state.skill[state.current]+1);
-
     if(responseMs<=FAST_LIMIT)
       state.fast[state.current]=Math.min(4,state.fast[state.current]+1);
     else
       state.fast[state.current]=Math.max(0,state.fast[state.current]-1);
 
-    playNote(card);
-
+    playCorrectNote(card);
     document.getElementById("feedback").innerHTML=
-      `<div>✓ <b>${target}!</b></div>`+
+      `<div class="feedback-result correct-result">✓ <b>${target}!</b></div>`+
       `<div class="mnemonic">${card.mnemonic}</div>`;
   }else{
     state.streak=0;
@@ -337,20 +481,22 @@ function answer(given){
     state.skill[state.current]=Math.max(0,state.skill[state.current]-1);
     state.fast[state.current]=0;
 
+    playMissSound();
+    setTimeout(()=>playCorrectNote(card),250);
+
     document.getElementById("feedback").innerHTML=
-      `Not quite — it was <b>${target}</b>.`;
+      `<div class="feedback-result wrong-result">Not quite — you chose <b>${given}</b>.</div>`+
+      `<div class="correct-answer">The note is <b>${target}</b>.</div>`+
+      `<div class="mnemonic">${card.mnemonic}</div>`;
   }
 
   buttons.forEach(b=>{
     if(b.dataset.answer===target)b.classList.add("correct");
     if(b.dataset.answer===given&&given!==target)b.classList.add("wrong");
   });
-
   document.getElementById("next").style.display="block";
-  save();
-  renderStats();
+  save(); renderStats();
 }
-
 document.getElementById("next").addEventListener("click",next);
 
 document.getElementById("reset").addEventListener("click",()=>{
