@@ -384,7 +384,7 @@ function choose(){
 function renderStats(){
   document.getElementById("streak").textContent=state.streak;
   document.getElementById("accuracy").textContent=
-    state.total?Math.round(state.correct/state.total*100)+"%":"—";
+    state.total>=20?Math.round(state.correct/state.total*100)+"%":"—";
   let mastered=0;
   for(let i=0;i<CARDS.length;i++)
     if(state.skill[i]>=4&&state.fast[i]>=4)mastered++;
