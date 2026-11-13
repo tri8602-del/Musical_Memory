@@ -413,12 +413,15 @@ button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .check-msg.good{color:#287044}.check-msg.big{font-size:19px}
 .check-msg.retry{color:#b86a0c}
 .check-msg.warn{color:#6b5200;font-weight:700;font-size:14px;max-width:520px}
+.auto-row{flex-basis:100%;display:flex;justify-content:center;gap:14px;font-size:13px;font-weight:700;color:#6b5200}
+.auto-row label{display:flex;align-items:center;gap:5px}
+.auto-row input{width:18px;height:18px;accent-color:#7357d9}
 .mode-row{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:700;color:#6b5200}
 .mode-row button{padding:7px 11px;font-size:14px;border-radius:12px;background:#fff;border:1px solid #e8cf86}
 .mode-row button.on{background:#7357d9;color:#fff;border-color:#7357d9}
 .remote-check{flex-basis:100%;text-align:center;font-weight:800;color:#22693f}
 @media (min-width:700px) and (orientation:landscape){.check-row{flex-direction:row;justify-content:center}.check-row .checkbtn{padding:8px 16px;font-size:16px}}
-</style></head><body><div class="app"><button class="grownup" id="grownup" type="button" aria-label="Grown-ups: hold to see progress">⋯</button><h1>Maddy's Do-Re-Mi Trainer</h1><div class="modes" id="modes"><button type="button" data-mode="notes">🎵 Note Cards</button><button type="button" data-mode="mix">🧩 Mix Up the Measures</button></div><div class="panel" id="notePanel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/30</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><div class="grownup-row"><button class="reset" id="reset" type="button">Reset progress</button><button class="reset" id="hideProgress" type="button">Hide progress</button></div></div><div class="panel mixpanel" id="mixPanel" hidden><div class="remote-bar" id="remoteBar" hidden><b>📱 Parent remote</b><span id="remoteStatus" class="rstatus"></span><button type="button" id="unpairPhone">Unpair</button></div><div class="kid-net" id="kidNet" hidden></div><div class="sizes" id="sizes"><button type="button" data-size="1">1 measure</button><button type="button" data-size="2">2 measures</button><button type="button" data-size="3">3 measures</button><button type="button" data-size="line">1 line</button></div><div class="mix-count" id="mixCount"></div><div class="sheet-card" id="sheetCard"><div class="mtag" id="mtag" hidden></div><canvas id="sheet" aria-label="Sheet music"></canvas></div><div class="remote-check" id="remoteCheck" hidden></div><div class="check-row" id="checkRow" hidden><button type="button" class="checkbtn" id="checkBtn"><span class="mic-dot" id="micDot" hidden></span><span id="checkLabel">🎤 Check me</span></button><div class="check-msg" id="checkMsg" aria-live="polite"></div></div><div class="parent-bar" id="parentBar" hidden><button type="button" class="play" id="playBtn">▶ Play</button><button type="button" id="stopBtn">■ Stop</button><label id="tempoRow">Tempo <input type="range" id="tempo" min="40" max="132" step="2" value="100"><span id="tempoVal">100</span></label><button type="button" id="lockBtn">🔒 Lock</button><div class="mode-row" id="modeRow">Practice: <button type="button" data-pm="solo">Solo (Check me)</button><button type="button" data-pm="adult">With an adult (phone)</button><button type="button" data-pm="both">Both</button></div><div class="pair-row" id="pairRow"><button type="button" id="pairOpen">📱 Pair a parent phone</button><span id="pairedNote" hidden></span><button type="button" id="unpairKid" hidden>Unpair</button></div><small id="audioNote">Only you can see this. No sound on iPad? Check the silent switch and volume.</small></div><div class="mix-done" id="mixDone"></div><div class="mix-nav"><button type="button" id="mixBack">← Back</button><button type="button" class="next" id="mixNext">Next →</button></div><button class="reset" id="mixRestart" type="button">Start over (new shuffle)</button></div><div class="pinwrap" id="pinWrap" hidden><div class="pinbox" id="pinBox"><h2 id="pinTitle">Grown-ups only</h2><p id="pinMsg"></p><div class="pindots" id="pinDots"><i></i><i></i><i></i><i></i></div><div class="pinpad" id="pinPad"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><span></span><button type="button">0</button><button type="button" data-k="del" aria-label="Delete">⌫</button></div><button type="button" class="cancel" id="pinCancel">Cancel</button><button type="button" class="cancel phone-link" id="pinPhone">📱 Set up this phone as the parent remote</button></div></div><div class="pinwrap" id="pairDlg" hidden><div class="pinbox"><h2>Pair a parent phone</h2><p>On your phone, open <b>tri8602-del.github.io/Musical_Memory/#parent</b> (or hold ⋯ and tap “Set up this phone as the parent remote”), then type:</p><div class="paircode" id="pairCode"></div><p id="pairWaitStatus"></p><button type="button" class="cancel" id="pairCancel">Cancel</button></div></div><div class="pinwrap" id="joinDlg" hidden><div class="pinbox"><h2>Parent phone</h2><p>Type the code shown on Maddy's iPad.</p><input id="joinCode" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="9" placeholder="ABCD-2345" aria-label="Pairing code"><p id="joinMsg"></p><button type="button" class="next" id="joinGo">Connect</button><button type="button" class="cancel" id="joinCancel">Cancel</button></div></div></div><script>
+</style></head><body><div class="app"><button class="grownup" id="grownup" type="button" aria-label="Grown-ups: hold to see progress">⋯</button><h1>Maddy's Do-Re-Mi Trainer</h1><div class="modes" id="modes"><button type="button" data-mode="notes">🎵 Note Cards</button><button type="button" data-mode="mix">🧩 Mix Up the Measures</button></div><div class="panel" id="notePanel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/30</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><div class="grownup-row"><button class="reset" id="reset" type="button">Reset progress</button><button class="reset" id="hideProgress" type="button">Hide progress</button></div></div><div class="panel mixpanel" id="mixPanel" hidden><div class="remote-bar" id="remoteBar" hidden><b>📱 Parent remote</b><span id="remoteStatus" class="rstatus"></span><button type="button" id="unpairPhone">Unpair</button></div><div class="kid-net" id="kidNet" hidden></div><div class="sizes" id="sizes"><button type="button" data-size="1">1 measure</button><button type="button" data-size="2">2 measures</button><button type="button" data-size="3">3 measures</button><button type="button" data-size="line">1 line</button></div><div class="mix-count" id="mixCount"></div><div class="sheet-card" id="sheetCard"><div class="mtag" id="mtag" hidden></div><canvas id="sheet" aria-label="Sheet music"></canvas></div><div class="remote-check" id="remoteCheck" hidden></div><div class="check-row" id="checkRow" hidden><button type="button" class="checkbtn" id="checkBtn"><span class="mic-dot" id="micDot" hidden></span><span id="checkLabel">🎤 Check me</span></button><div class="check-msg" id="checkMsg" aria-live="polite"></div></div><div class="parent-bar" id="parentBar" hidden><button type="button" class="play" id="playBtn">▶ Play</button><button type="button" id="stopBtn">■ Stop</button><label id="tempoRow">Tempo <input type="range" id="tempo" min="40" max="132" step="2" value="100"><span id="tempoVal">100</span></label><button type="button" id="lockBtn">🔒 Lock</button><div class="auto-row" id="autoRow"><label><input type="checkbox" id="autoListen" checked> Auto-listen</label><label><input type="checkbox" id="autoAdvance" checked> Auto-advance</label></div><div class="mode-row" id="modeRow">Practice: <button type="button" data-pm="solo">Solo (Check me)</button><button type="button" data-pm="adult">With an adult (phone)</button><button type="button" data-pm="both">Both</button></div><div class="pair-row" id="pairRow"><button type="button" id="pairOpen">📱 Pair a parent phone</button><span id="pairedNote" hidden></span><button type="button" id="unpairKid" hidden>Unpair</button></div><small id="audioNote">Only you can see this. No sound on iPad? Check the silent switch and volume.</small></div><div class="mix-done" id="mixDone"></div><div class="mix-nav"><button type="button" id="mixBack">← Back</button><button type="button" class="next" id="mixNext">Next →</button></div><button class="reset" id="mixRestart" type="button">Start over (new shuffle)</button></div><div class="pinwrap" id="pinWrap" hidden><div class="pinbox" id="pinBox"><h2 id="pinTitle">Grown-ups only</h2><p id="pinMsg"></p><div class="pindots" id="pinDots"><i></i><i></i><i></i><i></i></div><div class="pinpad" id="pinPad"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><span></span><button type="button">0</button><button type="button" data-k="del" aria-label="Delete">⌫</button></div><button type="button" class="cancel" id="pinCancel">Cancel</button><button type="button" class="cancel phone-link" id="pinPhone">📱 Set up this phone as the parent remote</button></div></div><div class="pinwrap" id="pairDlg" hidden><div class="pinbox"><h2>Pair a parent phone</h2><p>On your phone, open <b>tri8602-del.github.io/Musical_Memory/#parent</b> (or hold ⋯ and tap “Set up this phone as the parent remote”), then type:</p><div class="paircode" id="pairCode"></div><p id="pairWaitStatus"></p><button type="button" class="cancel" id="pairCancel">Cancel</button></div></div><div class="pinwrap" id="joinDlg" hidden><div class="pinbox"><h2>Parent phone</h2><p>Type the code shown on Maddy's iPad.</p><input id="joinCode" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="9" placeholder="ABCD-2345" aria-label="Pairing code"><p id="joinMsg"></p><button type="button" class="next" id="joinGo">Connect</button><button type="button" class="cancel" id="joinCancel">Cancel</button></div></div></div><script>
 "use strict";
 
 const CARDS=[{id:"treble_0",staff:"treble",image:"treble_0",sol:"Do",mnemonic:"Bunny Do",midi:60},{id:"treble_1",staff:"treble",image:"treble_1",sol:"Re",mnemonic:"Sticky Re",midi:62},{id:"treble_2",staff:"treble",image:"treble_2",sol:"Mi",mnemonic:"Cookie Mi",midi:64},{id:"treble_3",staff:"treble",image:"treble_3",sol:"Fa",mnemonic:"Balloon Fa",midi:65},{id:"treble_4",staff:"treble",image:"treble_4",sol:"Sol",mnemonic:"Marching Soldier",midi:67},{id:"treble_5",staff:"treble",image:"treble_5",sol:"La",mnemonic:"Princess La La",midi:69},{id:"treble_6",staff:"treble",image:"treble_6",sol:"Ti",mnemonic:"Bubble Ti",midi:71},{id:"treble_7",staff:"treble",image:"treble_7",sol:"Do",mnemonic:"Queen Do",midi:72},{id:"treble_8",staff:"treble",image:"treble_8",sol:"Re",mnemonic:"Cousin Re",midi:74},{id:"treble_9",staff:"treble",image:"treble_9",sol:"Mi",mnemonic:"Mi X",midi:76},{id:"treble_10",staff:"treble",image:"treble_10",sol:"Fa",mnemonic:"Father",midi:77},{id:"treble_11",staff:"treble",image:"treble_11",sol:"Sol",mnemonic:"General Soldier",midi:79},{id:"bass_0",staff:"bass",image:"bass_0",sol:"Do",mnemonic:"Bunny Do",midi:60},{id:"bass_1",staff:"bass",image:"bass_1",sol:"Ti",mnemonic:"Sitting Boy",midi:59},{id:"bass_2",staff:"bass",image:"bass_2",sol:"La",mnemonic:"Eiffel La",midi:57},{id:"bass_3",staff:"bass",image:"bass_3",sol:"Sol",mnemonic:"Sol Sausage",midi:55},{id:"bass_4",staff:"bass",image:"bass_4",sol:"Fa",mnemonic:"Fa Friends",midi:53},{id:"bass_5",staff:"bass",image:"bass_5",sol:"Mi",mnemonic:"Eyeball Mi",midi:52},{id:"bass_6",staff:"bass",image:"bass_6",sol:"Re",mnemonic:"Re Dog",midi:50},{id:"bass_7",staff:"bass",image:"bass_7",sol:"Do",mnemonic:"King Do",midi:48},{id:"bass_8",staff:"bass",image:"bass_8",sol:"Ti",mnemonic:"Baby Boy (Ti)",midi:47},{id:"bass_9",staff:"bass",image:"bass_9",sol:"La",mnemonic:"Mr. Bo La",midi:45},{id:"bass_10",staff:"bass",image:"bass_10",sol:"Sol",mnemonic:"Good Guy Sol",midi:43},{id:"treble_12",staff:"treble",image:"treble_12",sol:"La",mnemonic:"Candy La",midi:81},{id:"treble_13",staff:"treble",image:"treble_13",sol:"Ti",mnemonic:"Tea Cup",midi:83},{id:"treble_14",staff:"treble",image:"treble_14",sol:"Do",mnemonic:"Grandma Do",midi:84},{id:"bass_11",staff:"bass",image:"bass_11",sol:"Fa",mnemonic:"Hanging Fa",midi:41},{id:"bass_12",staff:"bass",image:"bass_12",sol:"Mi",mnemonic:"Mustache Mi",midi:40},{id:"bass_13",staff:"bass",image:"bass_13",sol:"Re",mnemonic:"Monkey Bar Re",midi:38},{id:"bass_14",staff:"bass",image:"bass_14",sol:"Do",mnemonic:"Grandpa Do",midi:36}];
@@ -1145,7 +1148,8 @@ function NoteSegmenter(emit){
   };
 }
 // Note events -> marks: 'g' right, 't' try again, 'u' not sure (shown as nothing), '.' not yet.
-function ScoreFollower(seq,onChange){
+function ScoreFollower(seq,onChange,opts){
+  opts=opts||{};
   const marks=seq.map(()=>".");let i=0;const used=new Set();
   const near=(m,x)=>Math.abs(m-x)<=CHECK.TOL;
   const octaveish=(m,x)=>[12,-12,24,-24,19,-19].some(k=>near(m,x+k));
@@ -1171,6 +1175,7 @@ function ScoreFollower(seq,onChange){
     let fresh=false,struck=false;const s0=onKey(ev.start);
     strike.forEach((d,k)=>{if(usedOn.has(k)||k>s0+10||k<s0-160||d.frac<0.12)return;struck=true;
       if(!d.same&&Math.abs(d.m-Math.round(m))%12===0)fresh=true;});
+    if(i===0&&opts.strikeFirst&&!struck)return;   // mic carried over from the last chunk: ignore what is still ringing
     if(near(m,exp)){
       if(i>0&&seq[i-1].midi===exp&&!struck)return;   // same pitch again: wait for a real new strike
       consume(ev);marks[i]="g";i++;onChange("right");return;}
@@ -1194,18 +1199,25 @@ function ScoreFollower(seq,onChange){
 }
 
 // ---- UI + mic ----
-const chk={state:"idle",follower:null,seq:null,key:"",ctx:null,stream:null,node:null,src:null,lastNote:0,idleTimer:null,retry:false,fixed:0};
+const chk={advTimer:null,guardUntil:0,viewKey:null,seg:null,state:"idle",follower:null,seq:null,key:"",ctx:null,stream:null,node:null,src:null,lastNote:0,idleTimer:null,retry:false,fixed:0};
 const $c=id=>document.getElementById(id);
 function chunkKey(){return mix.size+":"+mix.order[mix.pos];}
+// Grown-up settings (PIN view): listen automatically on each new chunk / move on after an all-green chunk
+const AUTO_LISTEN_KEY="maddy-auto-listen",AUTO_ADVANCE_KEY="maddy-auto-advance",ADVANCE_MS=1600,CARRY_GUARD_MS=250;
+function autoListenOn(){return localStorage.getItem(AUTO_LISTEN_KEY)!=="0";}
+function autoAdvanceOn(){return localStorage.getItem(AUTO_ADVANCE_KEY)!=="0";}
+function cancelAdvance(){if(chk.advTimer){clearTimeout(chk.advTimer);chk.advTimer=null;}if(chk.state==="advancing")chk.state="listening";}
+function micLive(){return !!(chk.stream&&chk.node&&chk.stream.getTracks().some(t=>t.readyState==="live")&&chk.ctx&&chk.ctx.state==="running");}
 function setCheckMsg(t,cls){const e=$c("checkMsg");e.textContent=t||"";e.className="check-msg"+(cls?" "+cls:"");}
 function updateCheckUI(){
   const show=checkAllowed()&&!$c("mixPanel").hidden;
   $c("checkRow").hidden=!show;
   const b=$c("checkBtn");
-  $c("checkLabel").textContent=chk.state==="listening"?"⏹ Stop listening":chk.state==="starting"?"Starting the microphone…":"🎤 Check me";
-  b.classList.toggle("listening",chk.state==="listening");
+  const on=chk.state==="listening"||chk.state==="advancing";
+  $c("checkLabel").textContent=on?"⏹ Stop listening":chk.state==="starting"?"Starting the microphone…":"🎤 Check me";
+  b.classList.toggle("listening",on);
   b.disabled=chk.state==="starting";
-  $c("micDot").hidden=chk.state!=="listening";
+  $c("micDot").hidden=!on;
 }
 window.drawCheckMarks=function(g,parts){
   let marks=null,seq=null;
@@ -1245,16 +1257,38 @@ function onCheckChange(kind){
 }
 function finishCheck(){
   const s=checkSummary();
+  if(s.tries===0&&s.right===s.n&&autoAdvanceOn()&&checkAllowed()&&micLive()){
+    // keep the mic, context and worklet running (iOS needs a tap to start them again); ignore sound meanwhile
+    chk.state="advancing";updateCheckUI();
+    setCheckMsg("⭐ All "+s.n+" notes right! Great job!","good big");pushCheck();
+    clearTimeout(chk.advTimer);
+    chk.advTimer=setTimeout(()=>{chk.advTimer=null;if(chk.state!=="advancing")return;mixNext();},ADVANCE_MS);
+    return;
+  }
   stopListening(false);
   if(s.tries===0&&s.right===s.n)setCheckMsg("⭐ All "+s.n+" notes right! Great job!","good big");
   else if(s.tries===0)setCheckMsg("⭐ Nice playing! "+s.right+" of "+s.n+" notes checked.","good");
   else setCheckMsg("Nice playing! Try the orange "+(s.tries===1?"note":"notes")+" again.","retry");
   pushCheck();
 }
-async function startListening(){
+// A new chunk while the mic is already open: just start following it (no new getUserMedia).
+function continueOnNewChunk(){
+  cancelAdvance();
+  chk.seq=chunkSeq(current());chk.key=chunkKey();chk.retry=false;
+  chk.follower=new ScoreFollower(chk.seq,onCheckChange,{strikeFirst:true});
+  chk.seg=new NoteSegmenter(ev=>{chk.lastNote=performance.now();chk.follower.note(ev);});
+  chk.guardUntil=performance.now()+CARRY_GUARD_MS;chk.lastNote=performance.now();
+  chk.state="listening";
+  setCheckMsg("Listening… play this part when you're ready 🎹","");
+  updateCheckUI();drawSheet();pushCheck();
+}
+async function startListening(opt){
+  opt=opt||{};
   if(!checkAllowed())return;
+  if(chk.state==="starting")return;
+  if(micLive()){continueOnNewChunk();return;}
   stopPlay&&stopPlay();
-  const msg=t=>setCheckMsg(t,"warn");
+  const msg=t=>{if(!opt.quiet)setCheckMsg(t,"warn");};
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){msg("This browser can't use the microphone. Try Safari on the iPad.");return;}
   const AC=window.AudioContext||window.webkitAudioContext;
   if(!AC||!window.AudioWorkletNode){msg("This browser is too old for Check me. Updating iPadOS should fix it.");return;}
@@ -1271,8 +1305,10 @@ async function startListening(){
       catch(e){await ctx.audioWorklet.addModule("checkme-worklet.js");}
       chk.moduleLoaded=true;
     }
-    const stream=await streamP;await resumed;
+    const stream=await streamP;
+    await Promise.race([resumed,new Promise(r=>setTimeout(r,800))]);
     if(chk.state!=="starting"){stream.getTracks().forEach(t=>t.stop());return;}
+    if(ctx.state!=="running")throw Object.assign(new Error("not running"),{name:"NotRunning"});   // no tap yet (iOS)
     chk.stream=stream;
     chk.src=ctx.createMediaStreamSource(stream);
     chk.node=new AudioWorkletNode(ctx,"checkme",{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
@@ -1280,10 +1316,11 @@ async function startListening(){
     chk.src.connect(chk.node);chk.node.connect(mute);mute.connect(ctx.destination);chk.mute=mute;
     chk.seq=chunkSeq(current());chk.key=chunkKey();chk.retry=false;
     chk.follower=new ScoreFollower(chk.seq,onCheckChange);
-    const seg=new NoteSegmenter(ev=>{chk.lastNote=performance.now();chk.follower.note(ev);});
-    chk.node.port.onmessage=e=>{if(chk.state!=="listening")return;
+    chk.seg=new NoteSegmenter(ev=>{chk.lastNote=performance.now();chk.follower.note(ev);});
+    chk.guardUntil=0;
+    chk.node.port.onmessage=e=>{if(chk.state!=="listening"||performance.now()<chk.guardUntil)return;
       if(e.data.n){const[on,m,sal,frac,same]=e.data.n;chk.lastNote=performance.now();chk.follower.onsetNote({on,m,sal,frac,same});return;}
-      e.data.forEach(f=>seg.frame(f));};
+      e.data.forEach(f=>chk.seg.frame(f));};
     chk.state="listening";chk.lastNote=performance.now();
     clearInterval(chk.idleTimer);
     chk.idleTimer=setInterval(()=>{if(chk.state==="listening"&&performance.now()-chk.lastNote>CHECK.IDLE*1000){stopListening(true);setCheckMsg("Stopped listening. Tap Check me when you're ready.","");}},1000);
@@ -1293,6 +1330,7 @@ async function startListening(){
     chk.state="idle";updateCheckUI();releaseMic();
     if(streamP)streamP.then(st=>st.getTracks().forEach(t=>t.stop()),()=>{});
     const n=e&&e.name;
+    if(opt.quiet){setCheckMsg("");return;}   // started without a tap and the browser said no: just wait for Check me
     if(n==="NotAllowedError"||n==="SecurityError"||n==="PermissionDeniedError")
       msg("Check me needs the microphone. Ask a grown-up to allow it: Settings › Safari › Microphone (or tap ᴀA › Website Settings).");
     else if(n==="NotFoundError"||n==="OverconstrainedError")msg("No microphone was found on this device.");
@@ -1308,6 +1346,7 @@ function releaseMic(){
   chk.stream=null;chk.node=null;chk.src=null;chk.mute=null;clearInterval(chk.idleTimer);
 }
 function stopListening(userStop){
+  if(chk.advTimer){clearTimeout(chk.advTimer);chk.advTimer=null;}
   if(chk.state==="idle")return;
   chk.state="idle";releaseMic();updateCheckUI();
   if(userStop&&chk.follower&&!chk.follower.done()){
@@ -1316,13 +1355,31 @@ function stopListening(userStop){
 }
 function resetCheck(){stopListening(false);chk.follower=null;chk.seq=null;chk.key="";setCheckMsg("");}
 $c("playBtn").addEventListener("click",()=>stopListening(true),true);  // never self-check the piano sound
-$c("checkBtn").addEventListener("click",()=>{chk.state==="listening"?stopListening(true):startListening();});
+$c("checkBtn").addEventListener("click",()=>{(chk.state==="listening"||chk.state==="advancing")?stopListening(true):startListening();});
+// any manual move cancels a pending auto-advance right away (the new chunk then starts listening itself)
+function manualMoveStart(){if(chk.advTimer){clearTimeout(chk.advTimer);chk.advTimer=null;}}
+function manualMoveEnd(){if(chk.state==="advancing"&&!chk.advTimer)stopListening(false);}   // tapped but nothing moved: the chunk is done, mic off
+["mixNext","mixBack","mixRestart"].forEach(id=>{$c(id).addEventListener("click",manualMoveStart,true);$c(id).addEventListener("click",manualMoveEnd);});
+$c("mixRestart").addEventListener("click",()=>{chk.forceMove=true;},true);   // Start over can land on the same chunk: still a fresh start
+document.querySelectorAll("#sizes button").forEach(b=>{b.addEventListener("click",manualMoveStart,true);b.addEventListener("click",manualMoveEnd);});
+// grown-up toggles
+[["autoListen",AUTO_LISTEN_KEY,autoListenOn],["autoAdvance",AUTO_ADVANCE_KEY,autoAdvanceOn]].forEach(([id,key,get])=>{
+  const e=$c(id);e.checked=get();
+  e.addEventListener("change",()=>{localStorage.setItem(key,e.checked?"1":"0");if(id==="autoAdvance"&&!e.checked&&chk.advTimer){cancelAdvance();finishCheck();}});
+});
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stopListening(true);});
 // new chunk / mode change -> clear marks, mic off
 const _renderMix=renderMix;
 renderMix=function(){
-  if(chk.key&&chk.key!==chunkKey())resetCheck();
+  const k=chunkKey(),force=!!chk.forceMove,moved=chk.viewKey!==null&&(chk.viewKey!==k||force);chk.viewKey=k;chk.forceMove=false;
+  let carry=false;
+  if(moved){cancelAdvance();carry=micLive()&&checkAllowed()&&autoListenOn()&&!$c("mixPanel").hidden;}
+  if(chk.key&&(chk.key!==k||force)&&!carry)resetCheck();
   _renderMix();updateCheckUI();updateModeUI();if(isRemote())renderRemoteCheck();
+  if(moved&&checkAllowed()&&autoListenOn()&&!$c("mixPanel").hidden){
+    if(carry)continueOnNewChunk();
+    else{const tap=!!(navigator.userActivation&&navigator.userActivation.isActive);startListening({quiet:!tap});}
+  }
 };
 const _setMode=setMode;
 setMode=function(m){if(m!=="mix")resetCheck();_setMode(m);updateCheckUI();};
@@ -1333,6 +1390,7 @@ function updateModeUI(){
   document.querySelectorAll("#modeRow button").forEach(b=>b.classList.toggle("on",b.dataset.pm===m));
   const pr=$c("pairRow");if(pr)pr.hidden=isRemote()||m==="solo";
   $c("modeRow").hidden=isRemote();
+  const ar=$c("autoRow");if(ar)ar.hidden=isRemote()||m==="adult";
 }
 document.querySelectorAll("#modeRow button").forEach(b=>b.addEventListener("click",()=>{
   const m=b.dataset.pm;
@@ -1342,6 +1400,7 @@ document.querySelectorAll("#modeRow button").forEach(b=>b.addEventListener("clic
   }
   localStorage.setItem(MODE_KEY,m);
   if(m==="adult")resetCheck();
+  $c("autoRow").hidden=isRemote()||practiceMode()==="adult";
   updateModeUI();updateCheckUI();pushCheck();
 }));
 

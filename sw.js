@@ -1,6 +1,6 @@
 // Offline support for Maddy's Do-Re-Mi Trainer.
 // Bump VERSION when shipping changes; old caches are deleted on activate.
-const VERSION = "v4";
+const VERSION = "v5";
 const CACHE = "maddy-musical-memory-" + VERSION;
 const PIANO = ["Fs3","A3","C4","Ds4","Fs4","A4","C5","Ds5","Fs5","A5","C6","Ds6","Fs6","A6","C7"].map(n => "./piano/" + n + ".mp3");
 const SHEET = [1,2,3,4,5,6,7,8].map(n => "./music/handel/line" + n + ".png");
