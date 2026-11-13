@@ -341,7 +341,56 @@ button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .grownup{position:absolute;top:max(2px,env(safe-area-inset-top));right:4px;width:34px;height:30px;border:0;border-radius:10px;
   background:transparent;color:rgba(0,0,0,.18);font-size:20px;line-height:1;padding:0;cursor:pointer;z-index:5}
 .app.show-progress .grownup{color:rgba(0,0,0,.45)}
-</style></head><body><div class="app"><button class="grownup" id="grownup" type="button" aria-label="Grown-ups: hold to see progress">⋯</button><h1>Maddy's Do-Re-Mi Trainer</h1><div class="panel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/30</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><div class="grownup-row"><button class="reset" id="reset" type="button">Reset progress</button><button class="reset" id="hideProgress" type="button">Hide progress</button></div></div></div><script>
+/* ---- Mix Up the Measures ---- */
+[hidden]{display:none!important}
+.modes{display:flex;justify-content:center;gap:8px;margin:-6px 0 12px}
+.modes button{padding:9px 14px;font-size:15px;border-radius:999px;background:#f0edf7;color:#5b5370;border:1px solid #e1dced}
+.modes button.on{background:linear-gradient(135deg,var(--purple),#9279ea);color:#fff;border-color:transparent;box-shadow:0 4px 10px rgba(115,87,217,.22)}
+.mixpanel{display:flex;flex-direction:column;gap:10px}
+.sizes{position:relative;z-index:1;display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.sizes button{padding:8px 12px;font-size:14px;border-radius:12px;background:#f5f2ff;border:1px solid #e5defd;color:#4b3c78}
+.sizes button.on{background:#7357d9;color:#fff;border-color:#7357d9}
+.mix-count{position:relative;z-index:1;text-align:center;font-size:15px;font-weight:700;color:var(--muted)}
+.sheet-card{position:relative;border:2px solid #e7e1ef;border-radius:20px;background:#fff;padding:8px;
+  display:flex;align-items:center;justify-content:center;min-height:120px;box-shadow:0 4px 12px rgba(60,45,90,.06)}
+.sheet-card canvas{display:block}
+.mtag{position:absolute;left:10px;top:8px;z-index:2;background:#fff3c4;color:#6b5200;border:1px solid #f0dc8a;border-radius:9px;padding:3px 8px;font-size:13px;font-weight:800}
+.parent-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;background:#fff8e6;border:1px dashed #e8cf86;border-radius:16px;padding:8px}
+.parent-bar button{padding:10px 14px;font-size:16px}
+.parent-bar .play{background:#2f9e62;color:#fff}
+.parent-bar .play:disabled{opacity:.55}
+.parent-bar label{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#6b5200}
+.parent-bar input[type=range]{width:150px}
+.parent-bar small{flex-basis:100%;text-align:center;color:#8a7a4a;font-size:12px}
+.mix-nav{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.mix-nav .next{margin:0}
+.mix-done{text-align:center;font-weight:800;color:#287044;min-height:0}
+.pinwrap{position:fixed;inset:0;z-index:50;background:rgba(40,30,70,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.pinbox{background:#fffdfb;border-radius:24px;padding:18px;width:min(330px,100%);text-align:center;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+.pinbox h2{margin:2px 0 4px;font-size:21px}
+.pinbox p{margin:0 0 10px;color:var(--muted);font-size:14px;min-height:18px}
+.pindots{display:flex;justify-content:center;gap:12px;margin:8px 0 14px}
+.pindots i{width:16px;height:16px;border-radius:50%;border:2px solid #7357d9;display:block}
+.pindots i.f{background:#7357d9}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pinpad button{font-size:22px;padding:13px 0}
+.pinbox .cancel{margin-top:10px;background:transparent;box-shadow:none;color:#918a9c;font-size:14px}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@media (min-width:700px) and (orientation:landscape){
+  .modes{margin:-2px 0 6px;flex:0 0 auto}
+  .panel.mixpanel{display:flex;flex-direction:column;gap:7px}
+  .mixpanel .sheet-card{flex:1 1 auto;min-height:0}
+  .mixpanel .sheet-card canvas{position:absolute;inset:0;margin:auto}
+  .mixpanel .reset{margin:0 auto}
+}
+@media (min-width:700px) and (orientation:landscape) and (max-height:700px){
+  .modes button{padding:6px 12px;font-size:14px}
+  .sizes button{padding:6px 10px;font-size:13px}
+  .mix-nav button,.parent-bar button{padding:8px 12px}
+}
+.mixpanel .next,.mixpanel .reset{grid-column:auto;grid-row:auto}
+</style></head><body><div class="app"><button class="grownup" id="grownup" type="button" aria-label="Grown-ups: hold to see progress">⋯</button><h1>Maddy's Do-Re-Mi Trainer</h1><div class="modes" id="modes"><button type="button" data-mode="notes">🎵 Note Cards</button><button type="button" data-mode="mix">🧩 Mix Up the Measures</button></div><div class="panel" id="notePanel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/30</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><div class="grownup-row"><button class="reset" id="reset" type="button">Reset progress</button><button class="reset" id="hideProgress" type="button">Hide progress</button></div></div><div class="panel mixpanel" id="mixPanel" hidden><div class="sizes" id="sizes"><button type="button" data-size="1">1 measure</button><button type="button" data-size="2">2 measures</button><button type="button" data-size="3">3 measures</button><button type="button" data-size="line">1 line</button></div><div class="mix-count" id="mixCount"></div><div class="sheet-card" id="sheetCard"><div class="mtag" id="mtag" hidden></div><canvas id="sheet" aria-label="Sheet music"></canvas></div><div class="parent-bar" id="parentBar" hidden><button type="button" class="play" id="playBtn">▶ Play</button><button type="button" id="stopBtn">■ Stop</button><label>Tempo <input type="range" id="tempo" min="40" max="132" step="2" value="100"><span id="tempoVal">100</span></label><button type="button" id="lockBtn">🔒 Lock</button><small id="audioNote">Only you can see this. No sound on iPad? Check the silent switch and volume.</small></div><div class="mix-done" id="mixDone"></div><div class="mix-nav"><button type="button" id="mixBack">← Back</button><button type="button" class="next" id="mixNext">Next →</button></div><button class="reset" id="mixRestart" type="button">Start over (new shuffle)</button></div><div class="pinwrap" id="pinWrap" hidden><div class="pinbox" id="pinBox"><h2 id="pinTitle">Grown-ups only</h2><p id="pinMsg"></p><div class="pindots" id="pinDots"><i></i><i></i><i></i><i></i></div><div class="pinpad" id="pinPad"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><span></span><button type="button">0</button><button type="button" data-k="del" aria-label="Delete">⌫</button></div><button type="button" class="cancel" id="pinCancel">Cancel</button></div></div></div><script>
 "use strict";
 
 const CARDS=[{id:"treble_0",staff:"treble",image:"treble_0",sol:"Do",mnemonic:"Bunny Do",midi:60},{id:"treble_1",staff:"treble",image:"treble_1",sol:"Re",mnemonic:"Sticky Re",midi:62},{id:"treble_2",staff:"treble",image:"treble_2",sol:"Mi",mnemonic:"Cookie Mi",midi:64},{id:"treble_3",staff:"treble",image:"treble_3",sol:"Fa",mnemonic:"Balloon Fa",midi:65},{id:"treble_4",staff:"treble",image:"treble_4",sol:"Sol",mnemonic:"Marching Soldier",midi:67},{id:"treble_5",staff:"treble",image:"treble_5",sol:"La",mnemonic:"Princess La La",midi:69},{id:"treble_6",staff:"treble",image:"treble_6",sol:"Ti",mnemonic:"Bubble Ti",midi:71},{id:"treble_7",staff:"treble",image:"treble_7",sol:"Do",mnemonic:"Queen Do",midi:72},{id:"treble_8",staff:"treble",image:"treble_8",sol:"Re",mnemonic:"Cousin Re",midi:74},{id:"treble_9",staff:"treble",image:"treble_9",sol:"Mi",mnemonic:"Mi X",midi:76},{id:"treble_10",staff:"treble",image:"treble_10",sol:"Fa",mnemonic:"Father",midi:77},{id:"treble_11",staff:"treble",image:"treble_11",sol:"Sol",mnemonic:"General Soldier",midi:79},{id:"bass_0",staff:"bass",image:"bass_0",sol:"Do",mnemonic:"Bunny Do",midi:60},{id:"bass_1",staff:"bass",image:"bass_1",sol:"Ti",mnemonic:"Sitting Boy",midi:59},{id:"bass_2",staff:"bass",image:"bass_2",sol:"La",mnemonic:"Eiffel La",midi:57},{id:"bass_3",staff:"bass",image:"bass_3",sol:"Sol",mnemonic:"Sol Sausage",midi:55},{id:"bass_4",staff:"bass",image:"bass_4",sol:"Fa",mnemonic:"Fa Friends",midi:53},{id:"bass_5",staff:"bass",image:"bass_5",sol:"Mi",mnemonic:"Eyeball Mi",midi:52},{id:"bass_6",staff:"bass",image:"bass_6",sol:"Re",mnemonic:"Re Dog",midi:50},{id:"bass_7",staff:"bass",image:"bass_7",sol:"Do",mnemonic:"King Do",midi:48},{id:"bass_8",staff:"bass",image:"bass_8",sol:"Ti",mnemonic:"Baby Boy (Ti)",midi:47},{id:"bass_9",staff:"bass",image:"bass_9",sol:"La",mnemonic:"Mr. Bo La",midi:45},{id:"bass_10",staff:"bass",image:"bass_10",sol:"Sol",mnemonic:"Good Guy Sol",midi:43},{id:"treble_12",staff:"treble",image:"treble_12",sol:"La",mnemonic:"Candy La",midi:81},{id:"treble_13",staff:"treble",image:"treble_13",sol:"Ti",mnemonic:"Tea Cup",midi:83},{id:"treble_14",staff:"treble",image:"treble_14",sol:"Do",mnemonic:"Grandma Do",midi:84},{id:"bass_11",staff:"bass",image:"bass_11",sol:"Fa",mnemonic:"Hanging Fa",midi:41},{id:"bass_12",staff:"bass",image:"bass_12",sol:"Mi",mnemonic:"Mustache Mi",midi:40},{id:"bass_13",staff:"bass",image:"bass_13",sol:"Re",mnemonic:"Monkey Bar Re",midi:38},{id:"bass_14",staff:"bass",image:"bass_14",sol:"Do",mnemonic:"Grandpa Do",midi:36}];
@@ -530,7 +579,7 @@ document.getElementById("reset").addEventListener("click",()=>{
 (function(){
   const app=document.querySelector(".app"), btn=document.getElementById("grownup");
   let t=null;
-  const down=e=>{e.preventDefault();clearTimeout(t);t=setTimeout(()=>{app.classList.add("show-progress");renderStats();},900);};
+  const down=e=>{e.preventDefault();clearTimeout(t);t=setTimeout(()=>{if(window.grownupHold&&window.grownupHold())return;app.classList.add("show-progress");renderStats();},900);};
   const up=()=>clearTimeout(t);
   btn.addEventListener("pointerdown",down);
   ["pointerup","pointerleave","pointercancel"].forEach(ev=>btn.addEventListener(ev,up));
@@ -543,4 +592,253 @@ next();
 // Offline support (relative path so it works under the GitHub Pages subpath).
 if("serviceWorker" in navigator)
   window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script><script>
+"use strict";
+// ---- Mix Up the Measures: shuffled chunks of the real sheet music ----
+// PIECE is generated from the PDF (see music/handel/README.md): line images + measure x-bounds
+// (fractions of the line image width, cropped at the barlines) + a hand-checked transcription
+// ([midi or 0 for a rest, length in eighth notes, 1 if tied to the next note]).
+const PIECE={"id":"handel-piano1","title":"Piano 1 \u2013 with suggested fingering (G. F. Handel)","tempo":100,"beatsPerMeasure":4,"lines":[{"img":"music/handel/line1.png","w":3442,"h":873,"m":[[1,0.0,0.2962],[2,0.29341,0.53452],[3,0.53173,0.76726],[4,0.76447,1.0]]},{"img":"music/handel/line2.png","w":3595,"h":873,"m":[[5,0.0,0.23076],[6,0.22808,0.43012],[7,0.42745,0.62631],[8,0.62364,0.82251],[9,0.81984,1.0]]},{"img":"music/handel/line3.png","w":3595,"h":873,"m":[[10,0.0,0.14159],[11,0.13892,0.35498],[12,0.35231,0.56821],[13,0.56554,0.78143],[14,0.77876,1.0]]},{"img":"music/handel/line4.png","w":3595,"h":873,"m":[[15,0.0,0.2568],[16,0.25413,0.47704],[17,0.47437,0.67257],[18,0.66989,0.78043],[19,0.77776,1.0]]},{"img":"music/handel/line5.png","w":3595,"h":873,"m":[[20,0.0,0.27617],[21,0.2735,0.51578],[22,0.51311,0.76039],[23,0.75772,1.0]]},{"img":"music/handel/line6.png","w":3595,"h":873,"m":[[24,0.0,0.25659],[25,0.25392,0.45209],[26,0.44942,0.55993],[27,0.55726,0.77997],[28,0.7773,1.0]]},{"img":"music/handel/line7.png","w":3595,"h":873,"m":[[29,0.0,0.27617],[30,0.2735,0.52096],[31,0.51828,0.76039],[32,0.75772,1.0]]},{"img":"music/handel/line8.png","w":1332,"h":873,"m":[[33,0.0,0.67448],[34,0.66727,1.0]]}],"notes":{"1":{"rh":[[0,1],[0,1],[0,1],[0,1],[69,1],[0,1],[0,1],[0,1]],"lh":[[57,1],[60,1],[64,1],[60,1],[0,1],[60,1],[64,1],[60,1]]},"2":{"rh":[[0,1],[0,1],[0,1],[0,1],[69,1],[0,1],[0,1],[0,1]],"lh":[[57,1],[60,1],[64,1],[60,1],[0,1],[60,1],[64,1],[60,1]]},"3":{"rh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"lh":[[72,1],[0,1],[83,1],[0,1],[81,1],[0,1],[79,1],[0,1]]},"4":{"rh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"lh":[[77,1],[0,1],[76,1],[0,1],[74,1],[0,1],[72,1],[0,1]]},"5":{"rh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]],"lh":[[71,1],[0,1],[81,1],[0,1],[79,1],[0,1],[77,1],[0,1]]},"6":{"rh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]],"lh":[[76,1],[0,1],[74,1],[0,1],[72,1],[0,1],[71,1],[0,1]]},"7":{"rh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]],"lh":[[69,1],[0,1],[79,1],[0,1],[77,1],[0,1],[76,1],[0,1]]},"8":{"rh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]],"lh":[[74,1],[0,1],[72,1],[0,1],[71,1],[0,1],[69,1],[0,1]]},"9":{"rh":[[81,2],[80,1],[78,1],[80,2,1],[80,1],[81,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]]},"10":{"rh":[[81,8]],"lh":[[0,8]]},"11":{"rh":[[84,1],[0,1],[74,1],[0,1],[76,1],[0,1],[77,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]]},"12":{"rh":[[79,1],[0,1],[81,1],[0,1],[83,1],[0,1],[84,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]]},"13":{"rh":[[83,1],[0,1],[71,1],[0,1],[74,1],[0,1],[76,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]]},"14":{"rh":[[77,1],[0,1],[79,1],[0,1],[81,1],[0,1],[83,1],[0,1]],"lh":[[0,1],[71,1],[0,1],[71,1],[0,1],[71,1],[0,1],[71,1]]},"15":{"rh":[[81,1],[0,1],[71,1],[0,1],[72,1],[0,1],[74,1],[0,1]],"lh":[[0,1],[69,1],[0,1],[69,1],[0,1],[69,1],[0,1],[69,1]]},"16":{"rh":[[76,1],[0,1],[77,1],[0,1],[79,1],[0,1],[81,1],[0,1]],"lh":[[0,1],[69,1],[0,1],[69,1],[0,1],[69,1],[0,1],[69,1]]},"17":{"rh":[[81,2],[80,1],[78,1],[80,2,1],[80,1],[81,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]]},"18":{"rh":[[81,8]],"lh":[[0,8]]},"19":{"rh":[[0,1],[96,1],[0,1],[96,1],[0,1],[96,1],[0,1],[96,1]],"lh":[[84,1],[0,1],[95,1],[0,1],[93,1],[0,1],[91,1],[0,1]]},"20":{"rh":[[0,1],[96,1],[0,1],[96,1],[0,1],[96,1],[0,1],[96,1]],"lh":[[89,1],[0,1],[88,1],[0,1],[86,1],[0,1],[84,1],[0,1]]},"21":{"rh":[[0,1],[95,1],[0,1],[95,1],[0,1],[95,1],[0,1],[95,1]],"lh":[[83,1],[0,1],[93,1],[0,1],[91,1],[0,1],[89,1],[0,1]]},"22":{"rh":[[0,1],[95,1],[0,1],[95,1],[0,1],[95,1],[0,1],[95,1]],"lh":[[88,1],[0,1],[86,1],[0,1],[84,1],[0,1],[83,1],[0,1]]},"23":{"rh":[[0,1],[93,1],[0,1],[93,1],[0,1],[93,1],[0,1],[93,1]],"lh":[[81,1],[0,1],[91,1],[0,1],[89,1],[0,1],[88,1],[0,1]]},"24":{"rh":[[0,1],[93,1],[0,1],[93,1],[0,1],[93,1],[0,1],[93,1]],"lh":[[86,1],[0,1],[84,1],[0,1],[83,1],[0,1],[81,1],[0,1]]},"25":{"rh":[[93,2],[92,1],[90,1],[92,2,1],[92,1],[93,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]]},"26":{"rh":[[93,8]],"lh":[[0,8]]},"27":{"rh":[[96,1],[0,1],[86,1],[0,1],[88,1],[0,1],[89,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]]},"28":{"rh":[[91,1],[0,1],[93,1],[0,1],[95,1],[0,1],[96,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]]},"29":{"rh":[[95,1],[0,1],[83,1],[0,1],[86,1],[0,1],[88,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]]},"30":{"rh":[[89,1],[0,1],[91,1],[0,1],[93,1],[0,1],[95,1],[0,1]],"lh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]]},"31":{"rh":[[93,1],[0,1],[83,1],[0,1],[84,1],[0,1],[86,1],[0,1]],"lh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]]},"32":{"rh":[[88,1],[0,1],[89,1],[0,1],[91,1],[0,1],[93,1],[0,1]],"lh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]]},"33":{"rh":[[93,2],[92,1],[90,1],[92,2,1],[92,1],[93,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]]},"34":{"rh":[[93,8]],"lh":[[0,8]]}}};
+const MIX_KEY="maddy-mix-measures-v1", PIN_KEY="maddy-grownup-pin-v1";
+const MEASURES=[];PIECE.lines.forEach((L,li)=>L.m.forEach(([n,x0,x1])=>MEASURES[n]={n,line:li,x0,x1}));
+const COUNT=MEASURES.length-1;
+const mix={size:"1",order:[],pos:0,round:1,unlocked:false};
+const lineImgs=PIECE.lines.map(L=>{const im=new Image();im.decoding="async";im.src=L.img;return im;});
+
+function chunks(size){
+  if(size==="line")return PIECE.lines.map(L=>L.m.map(m=>m[0]));
+  const n=+size,out=[];
+  for(let a=1;a<=COUNT;a+=n){const c=[];for(let m=a;m<a+n&&m<=COUNT;m++)c.push(m);out.push(c);}
+  return out;
+}
+function shuffled(len,avoidFirst){
+  const o=[...Array(len).keys()];
+  for(let j=o.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[o[j],o[k]]=[o[k],o[j]];}
+  if(len>1&&o[0]===avoidFirst)[o[0],o[1]]=[o[1],o[0]];
+  return o;
+}
+function mixSave(){localStorage.setItem(MIX_KEY,JSON.stringify({size:mix.size,order:mix.order,pos:mix.pos,round:mix.round}));}
+function mixLoad(){
+  try{const s=JSON.parse(localStorage.getItem(MIX_KEY)||"null");
+    if(s&&["1","2","3","line"].includes(s.size)){const len=chunks(s.size).length;
+      if(Array.isArray(s.order)&&s.order.length===len&&[...s.order].sort((a,b)=>a-b).every((v,i)=>v===i)){
+        mix.size=s.size;mix.order=s.order;mix.pos=Math.min(Math.max(0,s.pos|0),len-1);mix.round=s.round||1;return;}}
+  }catch(e){}
+  mix.order=shuffled(chunks(mix.size).length);mix.pos=0;
+}
+function current(){return chunks(mix.size)[mix.order[mix.pos]];}
+
+// Draw the chunk: one crop per line it touches, placed side by side (like the paper slips).
+function drawSheet(){
+  const c=current(),cv=document.getElementById("sheet"),parts=[];
+  c.forEach(n=>{const M=MEASURES[n],p=parts[parts.length-1];
+    if(p&&p.line===M.line)p.x1=M.x1;else parts.push({line:M.line,x0:M.x0,x1:M.x1});});
+  if(!parts.every(p=>lineImgs[p.line].complete&&lineImgs[p.line].naturalWidth)){
+    parts.forEach(p=>lineImgs[p.line].addEventListener("load",drawSheet,{once:true}));return;}
+  const H=PIECE.lines[0].h;
+  parts.forEach(p=>{const L=PIECE.lines[p.line];p.sx=Math.round(p.x0*L.w);p.sw=Math.round(p.x1*L.w)-p.sx;});
+  cv.width=parts.reduce((a,p)=>a+p.sw,0);cv.height=H;
+  const g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);
+  let x=0;parts.forEach(p=>{g.drawImage(lineImgs[p.line],p.sx,0,p.sw,H,x,0,p.sw,H);x+=p.sw;});
+  fitSheet();
+}
+function fitSheet(){
+  const cv=document.getElementById("sheet"),card=document.getElementById("sheetCard");
+  if(!cv.width)return;
+  const land=matchMedia("(min-width:700px) and (orientation:landscape)").matches;
+  const maxW=card.clientWidth-16;
+  const maxH=land?card.clientHeight-16:Math.min(innerHeight*0.6,700);
+  const s=Math.min(maxW/cv.width,maxH/cv.height);
+  cv.style.width=Math.floor(cv.width*s)+"px";cv.style.height=Math.floor(cv.height*s)+"px";
+}
+function renderMix(){
+  document.querySelectorAll("#sizes button").forEach(b=>b.classList.toggle("on",b.dataset.size===mix.size));
+  const total=mix.order.length,c=current();
+  document.getElementById("mixCount").textContent=(mix.pos+1)+" of "+total;
+  document.getElementById("mixBack").disabled=mix.pos===0;
+  const tag=document.getElementById("mtag");
+  tag.textContent=(c.length>1?"Measures "+c[0]+"–"+c[c.length-1]:"Measure "+c[0]);
+  tag.hidden=!mix.unlocked;
+  document.getElementById("parentBar").hidden=!mix.unlocked;
+  drawSheet();
+}
+function mixNext(){
+  stopPlay();
+  const done=document.getElementById("mixDone");done.textContent="";
+  if(mix.pos<mix.order.length-1)mix.pos++;
+  else{const last=mix.order[mix.pos];mix.order=shuffled(mix.order.length,last);mix.pos=0;mix.round++;
+    done.textContent="🎉 You played them all! Here's a new shuffle.";}
+  mixSave();renderMix();
+}
+function mixBack(){stopPlay();if(mix.pos>0){mix.pos--;document.getElementById("mixDone").textContent="";mixSave();renderMix();}}
+function mixRestart(){stopPlay();mix.order=shuffled(chunks(mix.size).length);mix.pos=0;mix.round=1;
+  document.getElementById("mixDone").textContent="";mixSave();renderMix();}
+function setSize(s){if(s===mix.size)return;stopPlay();mix.size=s;mix.order=shuffled(chunks(s).length);mix.pos=0;mix.round=1;
+  document.getElementById("mixDone").textContent="";mixSave();renderMix();}
+
+// ---- Modes ----
+function setMode(m){
+  const mixOn=m==="mix";
+  document.querySelectorAll("#modes button").forEach(b=>b.classList.toggle("on",b.dataset.mode===m));
+  document.getElementById("notePanel").hidden=mixOn;
+  document.getElementById("mixPanel").hidden=!mixOn;
+  document.querySelector(".app").classList.toggle("mix-mode",mixOn);
+  if(mixOn){document.querySelector(".app").classList.remove("show-progress");renderMix();}
+  else lockParent();
+  try{localStorage.setItem("maddy-mode",m);}catch(e){}
+}
+
+// ---- Grown-up PIN (stored on this device only, as a salted SHA-256 hash) ----
+async function hashPin(pin,salt){
+  const data=new TextEncoder().encode(salt+":"+pin);
+  if(window.crypto&&crypto.subtle){const h=await crypto.subtle.digest("SHA-256",data);
+    return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("");}
+  let h=2166136261;for(const b of data){h^=b;h=Math.imul(h,16777619)>>>0;}return "f"+h.toString(16);
+}
+const pin={entry:"",stage:"enter",first:"",fails:0,until:0};
+function pinStored(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||"null");}catch(e){return null;}}
+function openPin(){
+  pin.entry="";pin.first="";pin.stage=pinStored()?"enter":"set1";
+  document.getElementById("pinWrap").hidden=false;pinShow();
+}
+function closePin(){document.getElementById("pinWrap").hidden=true;pin.entry="";}
+function pinShow(msg){
+  const t={enter:"Grown-ups only",set1:"Choose a grown-up PIN",set2:"Type the PIN again"}[pin.stage];
+  document.getElementById("pinTitle").textContent=t;
+  document.getElementById("pinMsg").textContent=msg!=null?msg:(pin.stage==="enter"?"Enter your 4-digit PIN.":pin.stage==="set1"?"Pick 4 digits Maddy doesn't know.":"Just to be sure.");
+  document.querySelectorAll("#pinDots i").forEach((d,i)=>d.classList.toggle("f",i<pin.entry.length));
+}
+function pinShake(msg){const b=document.getElementById("pinBox");b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");pin.entry="";pinShow(msg);}
+async function pinKey(k){
+  if(Date.now()<pin.until){pinShow("Too many tries. Wait a moment.");return;}
+  if(k==="del"){pin.entry=pin.entry.slice(0,-1);pinShow();return;}
+  if(pin.entry.length>=4)return;
+  pin.entry+=k;pinShow();
+  if(pin.entry.length<4)return;
+  const e=pin.entry;
+  if(pin.stage==="set1"){pin.first=e;pin.stage="set2";pin.entry="";setTimeout(()=>pinShow(),120);return;}
+  if(pin.stage==="set2"){
+    if(e!==pin.first){pin.stage="set1";pinShake("Those didn't match. Pick 4 digits again.");return;}
+    const salt=Math.random().toString(36).slice(2);
+    localStorage.setItem(PIN_KEY,JSON.stringify({salt,hash:await hashPin(e,salt)}));
+    closePin();unlockParent();return;
+  }
+  const s=pinStored();
+  if(s&&await hashPin(e,s.salt)===s.hash){pin.fails=0;closePin();unlockParent();}
+  else{pin.fails++;if(pin.fails>=5){pin.until=Date.now()+30000;pin.fails=0;}pinShake("That's not it. Try again.");}
+}
+function unlockParent(){mix.unlocked=true;renderMix();Piano.load();}
+function lockParent(){stopPlay();mix.unlocked=false;if(!document.getElementById("mixPanel").hidden)renderMix();}
+
+// ---- Sampled piano (Salamander Grand, bundled in piano/ for offline use) ----
+const Piano={
+  SAMPLES:{Fs3:54,A3:57,C4:60,Ds4:63,Fs4:66,A4:69,C5:72,Ds5:75,Fs5:78,A5:81,C6:84,Ds6:87,Fs6:90,A6:93,C7:96},
+  buf:{},promise:null,
+  decode(ctx,ab){return new Promise((res,rej)=>{const p=ctx.decodeAudioData(ab,res,rej);if(p&&p.then)p.then(res,rej);});},
+  load(ctx){
+    ctx=ctx||getAudio();if(!ctx)return Promise.reject(new Error("no audio"));
+    if(this.promise&&!this.failed)return this.promise;
+    this.failed=false;this.ready=false;updatePlayBtn();
+    this.promise=Promise.all(Object.entries(this.SAMPLES).map(([name,midi])=>
+      fetch("piano/"+name+".mp3").then(r=>{if(!r.ok)throw new Error(name);return r.arrayBuffer();})
+        .then(ab=>this.decode(ctx,ab)).then(b=>{this.buf[midi]=b;})))
+      .then(()=>{this.ready=true;updatePlayBtn();})
+      .catch(e=>{this.failed=true;updatePlayBtn();throw e;});
+    return this.promise;
+  },
+  nearest(midi){let best=null;for(const k in this.buf){const d=Math.abs(k-midi);if(best===null||d<Math.abs(best-midi))best=+k;}return best;}
+};
+// Turn measures into note events {midi,t,dur,vel} (times in seconds).
+function chunkEvents(measures,bpm){
+  const e8=30/bpm,ev=[];
+  ["rh","lh"].forEach(hand=>{
+    let t=0,hold=null;
+    measures.forEach(n=>{
+      let pos=0;
+      PIECE.notes[n][hand].forEach(([midi,d,tie])=>{
+        if(midi){
+          if(hold&&hold.midi===midi){hold.dur+=d*e8;}
+          else{hold=null;const vel=(hand==="rh"?0.62:0.52)+(pos%8===0?0.12:pos%2===0?0.05:0);
+            const x={midi,t:t+pos*e8,dur:d*e8,vel};ev.push(x);hold=x;}
+          if(!tie)hold=null;
+        }else hold=null;
+        pos+=d;
+      });
+      t+=PIECE.beatsPerMeasure*2*e8;
+    });
+  });
+  return ev.sort((a,b)=>a.t-b.t);
+}
+function scheduleEvents(ctx,dest,ev,t0){
+  const srcs=[];
+  ev.forEach(x=>{
+    const sm=Piano.nearest(x.midi);if(sm===null)return;
+    const s=ctx.createBufferSource(),g=ctx.createGain();
+    s.buffer=Piano.buf[sm];s.playbackRate.value=Math.pow(2,(x.midi-sm)/12);
+    const on=t0+x.t,off=on+Math.max(0.08,x.dur*0.96);
+    g.gain.setValueAtTime(x.vel,on);g.gain.setTargetAtTime(0,off,0.07);
+    s.connect(g);g.connect(dest);s.start(on);s.stop(off+0.7);srcs.push(s);
+  });
+  return srcs;
+}
+let playing=null;
+function bpm(){return +document.getElementById("tempo").value;}
+function startPlay(){
+  if(!mix.unlocked)return;
+  const ctx=getAudio();if(!ctx)return;
+  Piano.load(ctx).then(()=>{
+    stopPlay();
+    const master=ctx.createGain();master.gain.value=2.4;master.connect(ctx.destination);
+    const ev=chunkEvents(current(),bpm()),t0=ctx.currentTime+0.08;
+    const srcs=scheduleEvents(ctx,master,ev,t0);
+    const end=ev.reduce((a,x)=>Math.max(a,x.t+x.dur),0);
+    playing={master,srcs,timer:setTimeout(()=>{playing=null;updatePlayBtn();},(end+0.6)*1000)};
+    window.__lastPlay={events:ev.length,measures:current().slice(),bpm:bpm()};
+    updatePlayBtn();
+  }).catch(()=>{});
+}
+function stopPlay(){
+  if(!playing)return;
+  const p=playing;playing=null;clearTimeout(p.timer);
+  try{p.master.gain.setTargetAtTime(0,p.master.context.currentTime,0.03);}catch(e){}
+  setTimeout(()=>{p.srcs.forEach(s=>{try{s.stop();}catch(e){}});try{p.master.disconnect();}catch(e){}},150);
+  updatePlayBtn();
+}
+function updatePlayBtn(){
+  const b=document.getElementById("playBtn");if(!b)return;
+  b.disabled=!Piano.ready;
+  b.textContent=Piano.failed?"Piano didn't load. Tap Lock, then open again":!Piano.ready?"Loading piano…":playing?"▶ Play again":"▶ Play";
+}
+// Offline render (used to make the sample MP3 and by the tests).
+window.renderMeasuresOffline=async function(measures,tempo,sampleRate){
+  sampleRate=sampleRate||44100;
+  const ev=chunkEvents(measures,tempo),end=ev.reduce((a,x)=>Math.max(a,x.t+x.dur),0)+1.2;
+  const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+  const ctx=new OAC(2,Math.ceil(end*sampleRate),sampleRate);
+  Piano.promise=null;Piano.buf={};await Piano.load(ctx);
+  const m=ctx.createGain();m.gain.value=2.4;m.connect(ctx.destination);
+  scheduleEvents(ctx,m,ev,0.05);
+  const out=await ctx.startRendering();
+  return {rate:sampleRate,buffer:out,events:ev};
+};
+
+// ---- Wire up ----
+document.querySelectorAll("#modes button").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+document.querySelectorAll("#sizes button").forEach(b=>b.addEventListener("click",()=>setSize(b.dataset.size)));
+document.getElementById("mixNext").addEventListener("click",mixNext);
+document.getElementById("mixBack").addEventListener("click",mixBack);
+document.getElementById("mixRestart").addEventListener("click",()=>{if(confirm("Start over with a new shuffle?"))mixRestart();});
+document.getElementById("playBtn").addEventListener("click",startPlay);
+document.getElementById("stopBtn").addEventListener("click",stopPlay);
+document.getElementById("lockBtn").addEventListener("click",lockParent);
+document.getElementById("tempo").addEventListener("input",e=>{document.getElementById("tempoVal").textContent=e.target.value;
+  try{localStorage.setItem("maddy-mix-tempo",e.target.value);}catch(_){}});
+document.querySelectorAll("#pinPad button").forEach(b=>b.addEventListener("click",()=>pinKey(b.dataset.k||b.textContent)));
+document.getElementById("pinCancel").addEventListener("click",closePin);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)lockParent();});
+addEventListener("resize",fitSheet);
+window.grownupHold=function(){if(!document.getElementById("mixPanel").hidden){if(!mix.unlocked)openPin();return true;}return false;};
+(function(){const t=localStorage.getItem("maddy-mix-tempo");if(t){document.getElementById("tempo").value=t;document.getElementById("tempoVal").textContent=t;}})();
+mixLoad();
+setMode(localStorage.getItem("maddy-mode")==="mix"?"mix":"notes");
 </script></body></html>
