@@ -14,7 +14,7 @@ class CheckMeProcessor extends AudioWorkletProcessor{
     this.hop=Math.round(this.sr*0.008);this.sinceHop=0;   // a frame every ~8 ms
     this.d=new Float32Array(this.maxTau+2);
     this.prevSample=0;this.half=0;this.halfAcc=0;
-    this.hf=[];this.lastOnset=-1;this.out=[];this.t=0;
+    this.hf=[];this.lastOnset=-1;this.lastSpec=-1;this.out=[];this.t=0;
     // onset note check: spectrum just after the strike minus spectrum just before it
     this.FN=2048;this.FFT=4096;this.H=8192;this.hist=new Float32Array(this.H);this.hi=0;this.count=0;
     this.pend=[];this.re=new Float32Array(this.FFT);this.im=new Float32Array(this.FFT);
@@ -33,9 +33,15 @@ class CheckMeProcessor extends AudioWorkletProcessor{
     let onset=0;const hist=this.hf,rh=this.rh||(this.rh=[]);
     if(hist.length>=6){let m=Infinity,mr=Infinity;for(const v of hist)m=Math.min(m,v);for(const v of rh)mr=Math.min(mr,v);
       const hit=(hf>m*1.9&&hf>0.0015)||(rms>mr*1.8&&rms>0.004&&hf>m*1.3);
-      if(hit&&(this.lastOnset<0||time-this.lastOnset>0.12)){onset=1;this.lastOnset=time;
+      const soft=!hit&&((hf>m*1.25&&hf>0.004)||(rms>mr*1.25&&rms>0.008));
+      if(hit&&(this.lastOnset<0||time-this.lastOnset>0.12)){onset=1;this.lastOnset=time;this.lastSpec=time;
+        const prev=this.pend.length&&this.pend[this.pend.length-1];
+        if(prev&&!prev.strong&&time-prev.time<0.05){prev.strong=1;}
+        else{const at=this.count-(this.hop>>1),gap=Math.round(this.sr*0.005);
+          if(at-this.hop-gap-this.FN>0)this.pend.push({time,pre:at-this.hop-gap-this.FN,post:at+gap,strong:1});}}
+      else if(soft&&(this.lastSpec<0||time-this.lastSpec>0.06)){this.lastSpec=time;
         const at=this.count-(this.hop>>1),gap=Math.round(this.sr*0.005);
-        if(at-this.hop-gap-this.FN>0)this.pend.push({time,pre:at-this.hop-gap-this.FN,post:at+gap});}}
+        if(at-this.hop-gap-this.FN>0)this.pend.push({time,pre:at-this.hop-gap-this.FN,post:at+gap,strong:0});}}
     hist.push(hf);if(hist.length>6)hist.shift();rh.push(rms);if(rh.length>6)rh.shift();
     // YIN
     let f0=0,conf=0;
@@ -81,7 +87,7 @@ class CheckMeProcessor extends AudioWorkletProcessor{
     let sb=0;for(let i=0;i<n;i++)sb+=B[i];
     let same=0;if(sb>0.3*sa){const P=hsum(B);let bp=55;for(let m=55;m<=100;m++)if(P[m]>P[bp])bp=m;same=bp===best?1:0;}
     let second=0;for(let m=55;m<=100;m++){const k=Math.abs(m-best);if(k&&k!==12&&k!==24&&k!==19&&S[m]>second)second=S[m];}
-    this.port.postMessage({n:[+p.time.toFixed(4),best,+(S[best]/(second||1e-9)).toFixed(2),+(sd/sa).toFixed(3),same]});
+    this.port.postMessage({n:[+p.time.toFixed(4),best,+(S[best]/(second||1e-9)).toFixed(2),+(sd/sa).toFixed(3),same,p.strong]});
   }
   process(inputs){
     const inp=inputs[0]&&inputs[0][0];
