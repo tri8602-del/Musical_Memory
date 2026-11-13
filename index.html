@@ -403,7 +403,22 @@ button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #joinCode{width:100%;font:800 26px ui-monospace,Menlo,monospace;letter-spacing:3px;text-align:center;text-transform:uppercase;padding:10px;border:2px solid #d9d0f5;border-radius:14px;margin:4px 0 8px}
 #joinGo{width:100%}
 .pinbox .phone-link{display:block;margin:4px auto 0;color:#7357d9}
-</style></head><body><div class="app"><button class="grownup" id="grownup" type="button" aria-label="Grown-ups: hold to see progress">⋯</button><h1>Maddy's Do-Re-Mi Trainer</h1><div class="modes" id="modes"><button type="button" data-mode="notes">🎵 Note Cards</button><button type="button" data-mode="mix">🧩 Mix Up the Measures</button></div><div class="panel" id="notePanel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/30</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><div class="grownup-row"><button class="reset" id="reset" type="button">Reset progress</button><button class="reset" id="hideProgress" type="button">Hide progress</button></div></div><div class="panel mixpanel" id="mixPanel" hidden><div class="remote-bar" id="remoteBar" hidden><b>📱 Parent remote</b><span id="remoteStatus" class="rstatus"></span><button type="button" id="unpairPhone">Unpair</button></div><div class="kid-net" id="kidNet" hidden></div><div class="sizes" id="sizes"><button type="button" data-size="1">1 measure</button><button type="button" data-size="2">2 measures</button><button type="button" data-size="3">3 measures</button><button type="button" data-size="line">1 line</button></div><div class="mix-count" id="mixCount"></div><div class="sheet-card" id="sheetCard"><div class="mtag" id="mtag" hidden></div><canvas id="sheet" aria-label="Sheet music"></canvas></div><div class="parent-bar" id="parentBar" hidden><button type="button" class="play" id="playBtn">▶ Play</button><button type="button" id="stopBtn">■ Stop</button><label>Tempo <input type="range" id="tempo" min="40" max="132" step="2" value="100"><span id="tempoVal">100</span></label><button type="button" id="lockBtn">🔒 Lock</button><div class="pair-row" id="pairRow"><button type="button" id="pairOpen">📱 Pair a parent phone</button><span id="pairedNote" hidden></span><button type="button" id="unpairKid" hidden>Unpair</button></div><small id="audioNote">Only you can see this. No sound on iPad? Check the silent switch and volume.</small></div><div class="mix-done" id="mixDone"></div><div class="mix-nav"><button type="button" id="mixBack">← Back</button><button type="button" class="next" id="mixNext">Next →</button></div><button class="reset" id="mixRestart" type="button">Start over (new shuffle)</button></div><div class="pinwrap" id="pinWrap" hidden><div class="pinbox" id="pinBox"><h2 id="pinTitle">Grown-ups only</h2><p id="pinMsg"></p><div class="pindots" id="pinDots"><i></i><i></i><i></i><i></i></div><div class="pinpad" id="pinPad"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><span></span><button type="button">0</button><button type="button" data-k="del" aria-label="Delete">⌫</button></div><button type="button" class="cancel" id="pinCancel">Cancel</button><button type="button" class="cancel phone-link" id="pinPhone">📱 Set up this phone as the parent remote</button></div></div><div class="pinwrap" id="pairDlg" hidden><div class="pinbox"><h2>Pair a parent phone</h2><p>On your phone, open <b>tri8602-del.github.io/Musical_Memory/#parent</b> (or hold ⋯ and tap “Set up this phone as the parent remote”), then type:</p><div class="paircode" id="pairCode"></div><p id="pairWaitStatus"></p><button type="button" class="cancel" id="pairCancel">Cancel</button></div></div><div class="pinwrap" id="joinDlg" hidden><div class="pinbox"><h2>Parent phone</h2><p>Type the code shown on Maddy's iPad.</p><input id="joinCode" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="9" placeholder="ABCD-2345" aria-label="Pairing code"><p id="joinMsg"></p><button type="button" class="next" id="joinGo">Connect</button><button type="button" class="cancel" id="joinCancel">Cancel</button></div></div></div><script>
+/* ---- Check me ---- */
+.check-row{display:flex;flex-direction:column;align-items:center;gap:6px}
+.check-row .checkbtn{display:flex;align-items:center;gap:8px;padding:12px 22px;font-size:18px;background:linear-gradient(#fff,#f3effd);border:2px solid #d9d0f5;color:#4b3c78}
+.check-row .checkbtn.listening{background:#eaf7ef;border-color:#9fd8b5;color:#22693f}
+.mic-dot{width:10px;height:10px;border-radius:50%;background:#2f9e62;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.check-msg{min-height:22px;text-align:center;font-size:16px;font-weight:800;color:#5b5370}
+.check-msg.good{color:#287044}.check-msg.big{font-size:19px}
+.check-msg.retry{color:#b86a0c}
+.check-msg.warn{color:#6b5200;font-weight:700;font-size:14px;max-width:520px}
+.mode-row{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:700;color:#6b5200}
+.mode-row button{padding:7px 11px;font-size:14px;border-radius:12px;background:#fff;border:1px solid #e8cf86}
+.mode-row button.on{background:#7357d9;color:#fff;border-color:#7357d9}
+.remote-check{flex-basis:100%;text-align:center;font-weight:800;color:#22693f}
+@media (min-width:700px) and (orientation:landscape){.check-row{flex-direction:row;justify-content:center}.check-row .checkbtn{padding:8px 16px;font-size:16px}}
+</style></head><body><div class="app"><button class="grownup" id="grownup" type="button" aria-label="Grown-ups: hold to see progress">⋯</button><h1>Maddy's Do-Re-Mi Trainer</h1><div class="modes" id="modes"><button type="button" data-mode="notes">🎵 Note Cards</button><button type="button" data-mode="mix">🧩 Mix Up the Measures</button></div><div class="panel" id="notePanel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/30</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><div class="grownup-row"><button class="reset" id="reset" type="button">Reset progress</button><button class="reset" id="hideProgress" type="button">Hide progress</button></div></div><div class="panel mixpanel" id="mixPanel" hidden><div class="remote-bar" id="remoteBar" hidden><b>📱 Parent remote</b><span id="remoteStatus" class="rstatus"></span><button type="button" id="unpairPhone">Unpair</button></div><div class="kid-net" id="kidNet" hidden></div><div class="sizes" id="sizes"><button type="button" data-size="1">1 measure</button><button type="button" data-size="2">2 measures</button><button type="button" data-size="3">3 measures</button><button type="button" data-size="line">1 line</button></div><div class="mix-count" id="mixCount"></div><div class="sheet-card" id="sheetCard"><div class="mtag" id="mtag" hidden></div><canvas id="sheet" aria-label="Sheet music"></canvas></div><div class="remote-check" id="remoteCheck" hidden></div><div class="check-row" id="checkRow" hidden><button type="button" class="checkbtn" id="checkBtn"><span class="mic-dot" id="micDot" hidden></span><span id="checkLabel">🎤 Check me</span></button><div class="check-msg" id="checkMsg" aria-live="polite"></div></div><div class="parent-bar" id="parentBar" hidden><button type="button" class="play" id="playBtn">▶ Play</button><button type="button" id="stopBtn">■ Stop</button><label id="tempoRow">Tempo <input type="range" id="tempo" min="40" max="132" step="2" value="100"><span id="tempoVal">100</span></label><button type="button" id="lockBtn">🔒 Lock</button><div class="mode-row" id="modeRow">Practice: <button type="button" data-pm="solo">Solo (Check me)</button><button type="button" data-pm="adult">With an adult (phone)</button><button type="button" data-pm="both">Both</button></div><div class="pair-row" id="pairRow"><button type="button" id="pairOpen">📱 Pair a parent phone</button><span id="pairedNote" hidden></span><button type="button" id="unpairKid" hidden>Unpair</button></div><small id="audioNote">Only you can see this. No sound on iPad? Check the silent switch and volume.</small></div><div class="mix-done" id="mixDone"></div><div class="mix-nav"><button type="button" id="mixBack">← Back</button><button type="button" class="next" id="mixNext">Next →</button></div><button class="reset" id="mixRestart" type="button">Start over (new shuffle)</button></div><div class="pinwrap" id="pinWrap" hidden><div class="pinbox" id="pinBox"><h2 id="pinTitle">Grown-ups only</h2><p id="pinMsg"></p><div class="pindots" id="pinDots"><i></i><i></i><i></i><i></i></div><div class="pinpad" id="pinPad"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><span></span><button type="button">0</button><button type="button" data-k="del" aria-label="Delete">⌫</button></div><button type="button" class="cancel" id="pinCancel">Cancel</button><button type="button" class="cancel phone-link" id="pinPhone">📱 Set up this phone as the parent remote</button></div></div><div class="pinwrap" id="pairDlg" hidden><div class="pinbox"><h2>Pair a parent phone</h2><p>On your phone, open <b>tri8602-del.github.io/Musical_Memory/#parent</b> (or hold ⋯ and tap “Set up this phone as the parent remote”), then type:</p><div class="paircode" id="pairCode"></div><p id="pairWaitStatus"></p><button type="button" class="cancel" id="pairCancel">Cancel</button></div></div><div class="pinwrap" id="joinDlg" hidden><div class="pinbox"><h2>Parent phone</h2><p>Type the code shown on Maddy's iPad.</p><input id="joinCode" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="9" placeholder="ABCD-2345" aria-label="Pairing code"><p id="joinMsg"></p><button type="button" class="next" id="joinGo">Connect</button><button type="button" class="cancel" id="joinCancel">Cancel</button></div></div></div><script>
 "use strict";
 
 const CARDS=[{id:"treble_0",staff:"treble",image:"treble_0",sol:"Do",mnemonic:"Bunny Do",midi:60},{id:"treble_1",staff:"treble",image:"treble_1",sol:"Re",mnemonic:"Sticky Re",midi:62},{id:"treble_2",staff:"treble",image:"treble_2",sol:"Mi",mnemonic:"Cookie Mi",midi:64},{id:"treble_3",staff:"treble",image:"treble_3",sol:"Fa",mnemonic:"Balloon Fa",midi:65},{id:"treble_4",staff:"treble",image:"treble_4",sol:"Sol",mnemonic:"Marching Soldier",midi:67},{id:"treble_5",staff:"treble",image:"treble_5",sol:"La",mnemonic:"Princess La La",midi:69},{id:"treble_6",staff:"treble",image:"treble_6",sol:"Ti",mnemonic:"Bubble Ti",midi:71},{id:"treble_7",staff:"treble",image:"treble_7",sol:"Do",mnemonic:"Queen Do",midi:72},{id:"treble_8",staff:"treble",image:"treble_8",sol:"Re",mnemonic:"Cousin Re",midi:74},{id:"treble_9",staff:"treble",image:"treble_9",sol:"Mi",mnemonic:"Mi X",midi:76},{id:"treble_10",staff:"treble",image:"treble_10",sol:"Fa",mnemonic:"Father",midi:77},{id:"treble_11",staff:"treble",image:"treble_11",sol:"Sol",mnemonic:"General Soldier",midi:79},{id:"bass_0",staff:"bass",image:"bass_0",sol:"Do",mnemonic:"Bunny Do",midi:60},{id:"bass_1",staff:"bass",image:"bass_1",sol:"Ti",mnemonic:"Sitting Boy",midi:59},{id:"bass_2",staff:"bass",image:"bass_2",sol:"La",mnemonic:"Eiffel La",midi:57},{id:"bass_3",staff:"bass",image:"bass_3",sol:"Sol",mnemonic:"Sol Sausage",midi:55},{id:"bass_4",staff:"bass",image:"bass_4",sol:"Fa",mnemonic:"Fa Friends",midi:53},{id:"bass_5",staff:"bass",image:"bass_5",sol:"Mi",mnemonic:"Eyeball Mi",midi:52},{id:"bass_6",staff:"bass",image:"bass_6",sol:"Re",mnemonic:"Re Dog",midi:50},{id:"bass_7",staff:"bass",image:"bass_7",sol:"Do",mnemonic:"King Do",midi:48},{id:"bass_8",staff:"bass",image:"bass_8",sol:"Ti",mnemonic:"Baby Boy (Ti)",midi:47},{id:"bass_9",staff:"bass",image:"bass_9",sol:"La",mnemonic:"Mr. Bo La",midi:45},{id:"bass_10",staff:"bass",image:"bass_10",sol:"Sol",mnemonic:"Good Guy Sol",midi:43},{id:"treble_12",staff:"treble",image:"treble_12",sol:"La",mnemonic:"Candy La",midi:81},{id:"treble_13",staff:"treble",image:"treble_13",sol:"Ti",mnemonic:"Tea Cup",midi:83},{id:"treble_14",staff:"treble",image:"treble_14",sol:"Do",mnemonic:"Grandma Do",midi:84},{id:"bass_11",staff:"bass",image:"bass_11",sol:"Fa",mnemonic:"Hanging Fa",midi:41},{id:"bass_12",staff:"bass",image:"bass_12",sol:"Mi",mnemonic:"Mustache Mi",midi:40},{id:"bass_13",staff:"bass",image:"bass_13",sol:"Re",mnemonic:"Monkey Bar Re",midi:38},{id:"bass_14",staff:"bass",image:"bass_14",sol:"Do",mnemonic:"Grandpa Do",midi:36}];
@@ -610,8 +625,9 @@ if("serviceWorker" in navigator)
 // ---- Mix Up the Measures: shuffled chunks of the real sheet music ----
 // PIECE is generated from the PDF (see music/handel/README.md): line images + measure x-bounds
 // (fractions of the line image width, cropped at the barlines) + a hand-checked transcription
-// ([midi or 0 for a rest, length in eighth notes, 1 if tied to the next note]).
-const PIECE={"id":"handel-piano1","title":"Piano 1 \u2013 with suggested fingering (G. F. Handel)","tempo":100,"beatsPerMeasure":4,"lines":[{"img":"music/handel/line1.png","w":3442,"h":873,"m":[[1,0.0,0.2962],[2,0.29341,0.53452],[3,0.53173,0.76726],[4,0.76447,1.0]]},{"img":"music/handel/line2.png","w":3595,"h":873,"m":[[5,0.0,0.23076],[6,0.22808,0.43012],[7,0.42745,0.62631],[8,0.62364,0.82251],[9,0.81984,1.0]]},{"img":"music/handel/line3.png","w":3595,"h":873,"m":[[10,0.0,0.14159],[11,0.13892,0.35498],[12,0.35231,0.56821],[13,0.56554,0.78143],[14,0.77876,1.0]]},{"img":"music/handel/line4.png","w":3595,"h":873,"m":[[15,0.0,0.2568],[16,0.25413,0.47704],[17,0.47437,0.67257],[18,0.66989,0.78043],[19,0.77776,1.0]]},{"img":"music/handel/line5.png","w":3595,"h":873,"m":[[20,0.0,0.27617],[21,0.2735,0.51578],[22,0.51311,0.76039],[23,0.75772,1.0]]},{"img":"music/handel/line6.png","w":3595,"h":873,"m":[[24,0.0,0.25659],[25,0.25392,0.45209],[26,0.44942,0.55993],[27,0.55726,0.77997],[28,0.7773,1.0]]},{"img":"music/handel/line7.png","w":3595,"h":873,"m":[[29,0.0,0.27617],[30,0.2735,0.52096],[31,0.51828,0.76039],[32,0.75772,1.0]]},{"img":"music/handel/line8.png","w":1332,"h":873,"m":[[33,0.0,0.67448],[34,0.66727,1.0]]}],"notes":{"1":{"rh":[[0,1],[0,1],[0,1],[0,1],[69,1],[0,1],[0,1],[0,1]],"lh":[[57,1],[60,1],[64,1],[60,1],[0,1],[60,1],[64,1],[60,1]]},"2":{"rh":[[0,1],[0,1],[0,1],[0,1],[69,1],[0,1],[0,1],[0,1]],"lh":[[57,1],[60,1],[64,1],[60,1],[0,1],[60,1],[64,1],[60,1]]},"3":{"rh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"lh":[[72,1],[0,1],[83,1],[0,1],[81,1],[0,1],[79,1],[0,1]]},"4":{"rh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"lh":[[77,1],[0,1],[76,1],[0,1],[74,1],[0,1],[72,1],[0,1]]},"5":{"rh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]],"lh":[[71,1],[0,1],[81,1],[0,1],[79,1],[0,1],[77,1],[0,1]]},"6":{"rh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]],"lh":[[76,1],[0,1],[74,1],[0,1],[72,1],[0,1],[71,1],[0,1]]},"7":{"rh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]],"lh":[[69,1],[0,1],[79,1],[0,1],[77,1],[0,1],[76,1],[0,1]]},"8":{"rh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]],"lh":[[74,1],[0,1],[72,1],[0,1],[71,1],[0,1],[69,1],[0,1]]},"9":{"rh":[[81,2],[80,1],[78,1],[80,2,1],[80,1],[81,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]]},"10":{"rh":[[81,8]],"lh":[[0,8]]},"11":{"rh":[[84,1],[0,1],[74,1],[0,1],[76,1],[0,1],[77,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]]},"12":{"rh":[[79,1],[0,1],[81,1],[0,1],[83,1],[0,1],[84,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]]},"13":{"rh":[[83,1],[0,1],[71,1],[0,1],[74,1],[0,1],[76,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]]},"14":{"rh":[[77,1],[0,1],[79,1],[0,1],[81,1],[0,1],[83,1],[0,1]],"lh":[[0,1],[71,1],[0,1],[71,1],[0,1],[71,1],[0,1],[71,1]]},"15":{"rh":[[81,1],[0,1],[71,1],[0,1],[72,1],[0,1],[74,1],[0,1]],"lh":[[0,1],[69,1],[0,1],[69,1],[0,1],[69,1],[0,1],[69,1]]},"16":{"rh":[[76,1],[0,1],[77,1],[0,1],[79,1],[0,1],[81,1],[0,1]],"lh":[[0,1],[69,1],[0,1],[69,1],[0,1],[69,1],[0,1],[69,1]]},"17":{"rh":[[81,2],[80,1],[78,1],[80,2,1],[80,1],[81,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]]},"18":{"rh":[[81,8]],"lh":[[0,8]]},"19":{"rh":[[0,1],[96,1],[0,1],[96,1],[0,1],[96,1],[0,1],[96,1]],"lh":[[84,1],[0,1],[95,1],[0,1],[93,1],[0,1],[91,1],[0,1]]},"20":{"rh":[[0,1],[96,1],[0,1],[96,1],[0,1],[96,1],[0,1],[96,1]],"lh":[[89,1],[0,1],[88,1],[0,1],[86,1],[0,1],[84,1],[0,1]]},"21":{"rh":[[0,1],[95,1],[0,1],[95,1],[0,1],[95,1],[0,1],[95,1]],"lh":[[83,1],[0,1],[93,1],[0,1],[91,1],[0,1],[89,1],[0,1]]},"22":{"rh":[[0,1],[95,1],[0,1],[95,1],[0,1],[95,1],[0,1],[95,1]],"lh":[[88,1],[0,1],[86,1],[0,1],[84,1],[0,1],[83,1],[0,1]]},"23":{"rh":[[0,1],[93,1],[0,1],[93,1],[0,1],[93,1],[0,1],[93,1]],"lh":[[81,1],[0,1],[91,1],[0,1],[89,1],[0,1],[88,1],[0,1]]},"24":{"rh":[[0,1],[93,1],[0,1],[93,1],[0,1],[93,1],[0,1],[93,1]],"lh":[[86,1],[0,1],[84,1],[0,1],[83,1],[0,1],[81,1],[0,1]]},"25":{"rh":[[93,2],[92,1],[90,1],[92,2,1],[92,1],[93,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]]},"26":{"rh":[[93,8]],"lh":[[0,8]]},"27":{"rh":[[96,1],[0,1],[86,1],[0,1],[88,1],[0,1],[89,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]]},"28":{"rh":[[91,1],[0,1],[93,1],[0,1],[95,1],[0,1],[96,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]]},"29":{"rh":[[95,1],[0,1],[83,1],[0,1],[86,1],[0,1],[88,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]]},"30":{"rh":[[89,1],[0,1],[91,1],[0,1],[93,1],[0,1],[95,1],[0,1]],"lh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]]},"31":{"rh":[[93,1],[0,1],[83,1],[0,1],[84,1],[0,1],[86,1],[0,1]],"lh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]]},"32":{"rh":[[88,1],[0,1],[89,1],[0,1],[91,1],[0,1],[93,1],[0,1]],"lh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]]},"33":{"rh":[[93,2],[92,1],[90,1],[92,2,1],[92,1],[93,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]]},"34":{"rh":[[93,8]],"lh":[[0,8]]}}};
+// ([midi or 0 for a rest, length in eighth notes, 1 if tied to the next note]); rhp/lhp hold each
+// notehead's [x, y] as fractions of its line image (for the Check me marks).
+const PIECE={"id":"handel-piano1","title":"Piano 1 \u2013 with suggested fingering (G. F. Handel)","tempo":100,"beatsPerMeasure":4,"lines":[{"img":"music/handel/line1.png","w":3442,"h":873,"m":[[1,0.0,0.2962],[2,0.29341,0.53452],[3,0.53173,0.76726],[4,0.76447,1.0]]},{"img":"music/handel/line2.png","w":3595,"h":873,"m":[[5,0.0,0.23076],[6,0.22808,0.43012],[7,0.42745,0.62631],[8,0.62364,0.82251],[9,0.81984,1.0]]},{"img":"music/handel/line3.png","w":3595,"h":873,"m":[[10,0.0,0.14159],[11,0.13892,0.35498],[12,0.35231,0.56821],[13,0.56554,0.78143],[14,0.77876,1.0]]},{"img":"music/handel/line4.png","w":3595,"h":873,"m":[[15,0.0,0.2568],[16,0.25413,0.47704],[17,0.47437,0.67257],[18,0.66989,0.78043],[19,0.77776,1.0]]},{"img":"music/handel/line5.png","w":3595,"h":873,"m":[[20,0.0,0.27617],[21,0.2735,0.51578],[22,0.51311,0.76039],[23,0.75772,1.0]]},{"img":"music/handel/line6.png","w":3595,"h":873,"m":[[24,0.0,0.25659],[25,0.25392,0.45209],[26,0.44942,0.55993],[27,0.55726,0.77997],[28,0.7773,1.0]]},{"img":"music/handel/line7.png","w":3595,"h":873,"m":[[29,0.0,0.27617],[30,0.2735,0.52096],[31,0.51828,0.76039],[32,0.75772,1.0]]},{"img":"music/handel/line8.png","w":1332,"h":873,"m":[[33,0.0,0.67448],[34,0.66727,1.0]]}],"notes":{"1":{"rh":[[0,1],[0,1],[0,1],[0,1],[69,1],[0,1],[0,1],[0,1]],"lh":[[57,1],[60,1],[64,1],[60,1],[0,1],[60,1],[64,1],[60,1]],"rhp":[null,null,null,null,[0.1899,0.3586],null,null,null],"lhp":[[0.0776,0.8847],[0.1055,0.8457],[0.1342,0.8068],[0.162,0.8457],null,[0.2177,0.8457],[0.2455,0.8068],[0.2733,0.8457]]},"2":{"rh":[[0,1],[0,1],[0,1],[0,1],[69,1],[0,1],[0,1],[0,1]],"lh":[[57,1],[60,1],[64,1],[60,1],[0,1],[60,1],[64,1],[60,1]],"rhp":[null,null,null,null,[0.4227,0.3586],null,null,null],"lhp":[[0.3112,0.8847],[0.3391,0.8457],[0.367,0.8068],[0.3948,0.8457],null,[0.4504,0.8457],[0.4783,0.8068],[0.5061,0.8457]]},"3":{"rh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"lh":[[72,1],[0,1],[83,1],[0,1],[81,1],[0,1],[79,1],[0,1]],"rhp":[null,[0.5775,0.1833],null,[0.633,0.1833],null,[0.6887,0.1833],null,[0.7443,0.1833]],"lhp":[[0.5496,0.7093],null,[0.6053,0.5924],null,[0.6609,0.6119],null,[0.7165,0.6314],null]},"4":{"rh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"lh":[[77,1],[0,1],[76,1],[0,1],[74,1],[0,1],[72,1],[0,1]],"rhp":[null,[0.8103,0.1833],null,[0.8658,0.1833],null,[0.9215,0.1833],null,[0.9771,0.1833]],"lhp":[[0.7824,0.6509],null,[0.8381,0.6704],null,[0.8937,0.6899],null,[0.9493,0.7093],null]},"5":{"rh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]],"lh":[[71,1],[0,1],[81,1],[0,1],[79,1],[0,1],[77,1],[0,1]],"rhp":[null,[0.0741,0.2027],null,[0.1202,0.2027],null,[0.1663,0.2027],null,[0.2124,0.2027]],"lhp":[[0.0511,0.7288],null,[0.0972,0.6119],null,[0.1432,0.6314],null,[0.1893,0.6509],null]},"6":{"rh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]],"lh":[[76,1],[0,1],[74,1],[0,1],[72,1],[0,1],[71,1],[0,1]],"rhp":[null,[0.2683,0.2027],null,[0.3143,0.2027],null,[0.3604,0.2027],null,[0.4065,0.2027]],"lhp":[[0.2452,0.6704],null,[0.2913,0.6898],null,[0.3374,0.7093],null,[0.3834,0.7288],null]},"7":{"rh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]],"lh":[[69,1],[0,1],[79,1],[0,1],[77,1],[0,1],[76,1],[0,1]],"rhp":[null,[0.4698,0.2222],null,[0.5158,0.2222],null,[0.5619,0.2222],null,[0.6079,0.2222]],"lhp":[[0.4446,0.7483],null,[0.4928,0.6314],null,[0.5388,0.6509],null,[0.5849,0.6704],null]},"8":{"rh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]],"lh":[[74,1],[0,1],[72,1],[0,1],[71,1],[0,1],[69,1],[0,1]],"rhp":[null,[0.6638,0.2222],null,[0.7099,0.2222],null,[0.756,0.2222],null,[0.8042,0.2222]],"lhp":[[0.6408,0.6898],null,[0.6869,0.7093],null,[0.733,0.7288],null,[0.779,0.7483],null]},"9":{"rh":[[81,2],[80,1],[78,1],[80,2,1],[80,1],[81,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]],"rhp":[[0.837,0.2222],[0.8723,0.2417],[0.8978,0.2612],[0.9233,0.2417],[0.9586,0.2417],[0.9816,0.2222]],"lhp":[null,null,null,null,null,null]},"10":{"rh":[[81,8]],"lh":[[0,8]],"rhp":[[0.0529,0.2222]],"lhp":[null]},"11":{"rh":[[84,1],[0,1],[74,1],[0,1],[76,1],[0,1],[77,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]],"rhp":[[0.1562,0.1832],null,[0.207,0.3001],null,[0.2579,0.2806],null,[0.3087,0.2611],null],"lhp":[null,[0.1816,0.7093],null,[0.2324,0.7093],null,[0.2833,0.7093],null,[0.3342,0.7093]]},"12":{"rh":[[79,1],[0,1],[81,1],[0,1],[83,1],[0,1],[84,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]],"rhp":[[0.3695,0.2416],null,[0.4203,0.2222],null,[0.4712,0.2027],null,[0.522,0.1832],null],"lhp":[null,[0.3949,0.7093],null,[0.4457,0.7093],null,[0.4966,0.7093],null,[0.5474,0.7093]]},"13":{"rh":[[83,1],[0,1],[71,1],[0,1],[74,1],[0,1],[76,1],[0,1]],"lh":[[0,1],[72,1],[0,1],[72,1],[0,1],[72,1],[0,1],[72,1]],"rhp":[[0.5827,0.2027],null,[0.6336,0.3391],null,[0.6845,0.3001],null,[0.7353,0.2806],null],"lhp":[null,[0.6081,0.7093],null,[0.659,0.7093],null,[0.7099,0.7093],null,[0.7607,0.7093]]},"14":{"rh":[[77,1],[0,1],[79,1],[0,1],[81,1],[0,1],[83,1],[0,1]],"lh":[[0,1],[71,1],[0,1],[71,1],[0,1],[71,1],[0,1],[71,1]],"rhp":[[0.796,0.2611],null,[0.8469,0.2416],null,[0.8977,0.2222],null,[0.9485,0.2027],null],"lhp":[null,[0.8214,0.7287],null,[0.8723,0.7287],null,[0.9231,0.7287],null,[0.974,0.7287]]},"15":{"rh":[[81,1],[0,1],[71,1],[0,1],[72,1],[0,1],[74,1],[0,1]],"lh":[[0,1],[69,1],[0,1],[69,1],[0,1],[69,1],[0,1],[69,1]],"rhp":[[0.0514,0.2222],null,[0.1037,0.3391],null,[0.1561,0.3196],null,[0.2085,0.3002],null],"lhp":[null,[0.0776,0.7483],null,[0.1299,0.7483],null,[0.1823,0.7483],null,[0.2347,0.7483]]},"16":{"rh":[[76,1],[0,1],[77,1],[0,1],[79,1],[0,1],[81,1],[0,1]],"lh":[[0,1],[69,1],[0,1],[69,1],[0,1],[69,1],[0,1],[69,1]],"rhp":[[0.2716,0.2807],null,[0.3239,0.2612],null,[0.3763,0.2417],null,[0.4286,0.2222],null],"lhp":[null,[0.2978,0.7483],null,[0.3501,0.7483],null,[0.4025,0.7483],null,[0.4548,0.7483]]},"17":{"rh":[[81,2],[80,1],[78,1],[80,2,1],[80,1],[81,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]],"rhp":[[0.4917,0.2222],[0.5319,0.2417],[0.5583,0.2612],[0.5846,0.2417],[0.6248,0.2417],[0.651,0.2222]],"lhp":[null,null,null,null,null,null]},"18":{"rh":[[81,8]],"lh":[[0,8]],"rhp":[[0.689,0.2222]],"lhp":[null]},"19":{"rh":[[0,1],[96,1],[0,1],[96,1],[0,1],[96,1],[0,1],[96,1]],"lh":[[84,1],[0,1],[95,1],[0,1],[93,1],[0,1],[91,1],[0,1]],"rhp":[null,[0.8214,0.1832],null,[0.8738,0.1832],null,[0.9261,0.1832],null,[0.9785,0.1832]],"lhp":[[0.7952,0.7093],null,[0.8476,0.5924],null,[0.8999,0.6119],null,[0.9523,0.6314],null]},"20":{"rh":[[0,1],[96,1],[0,1],[96,1],[0,1],[96,1],[0,1],[96,1]],"lh":[[89,1],[0,1],[88,1],[0,1],[86,1],[0,1],[84,1],[0,1]],"rhp":[null,[0.0799,0.1832],null,[0.1373,0.1832],null,[0.1947,0.1832],null,[0.2521,0.1832]],"lhp":[[0.0512,0.6509],null,[0.1086,0.6703],null,[0.166,0.6898],null,[0.2234,0.7093],null]},"21":{"rh":[[0,1],[95,1],[0,1],[95,1],[0,1],[95,1],[0,1],[95,1]],"lh":[[83,1],[0,1],[93,1],[0,1],[91,1],[0,1],[89,1],[0,1]],"rhp":[null,[0.3194,0.2027],null,[0.3768,0.2027],null,[0.4342,0.2027],null,[0.4916,0.2027]],"lhp":[[0.2907,0.7288],null,[0.3481,0.6119],null,[0.4055,0.6314],null,[0.4629,0.6509],null]},"22":{"rh":[[0,1],[95,1],[0,1],[95,1],[0,1],[95,1],[0,1],[95,1]],"lh":[[88,1],[0,1],[86,1],[0,1],[84,1],[0,1],[83,1],[0,1]],"rhp":[null,[0.559,0.2027],null,[0.6163,0.2027],null,[0.6737,0.2027],null,[0.7312,0.2027]],"lhp":[[0.5302,0.6703],null,[0.5876,0.6898],null,[0.6451,0.7093],null,[0.7025,0.7288],null]},"23":{"rh":[[0,1],[93,1],[0,1],[93,1],[0,1],[93,1],[0,1],[93,1]],"lh":[[81,1],[0,1],[91,1],[0,1],[89,1],[0,1],[88,1],[0,1]],"rhp":[null,[0.8037,0.2222],null,[0.8611,0.2222],null,[0.9185,0.2222],null,[0.9759,0.2222]],"lhp":[[0.775,0.7483],null,[0.8324,0.6314],null,[0.8898,0.6509],null,[0.9472,0.6703],null]},"24":{"rh":[[0,1],[93,1],[0,1],[93,1],[0,1],[93,1],[0,1],[93,1]],"lh":[[86,1],[0,1],[84,1],[0,1],[83,1],[0,1],[81,1],[0,1]],"rhp":[null,[0.0775,0.2222],null,[0.13,0.2222],null,[0.1824,0.2222],null,[0.2349,0.2222]],"lhp":[[0.0512,0.6898],null,[0.1037,0.7093],null,[0.1562,0.7288],null,[0.2087,0.7483],null]},"25":{"rh":[[93,2],[92,1],[90,1],[92,2,1],[92,1],[93,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]],"rhp":[[0.2712,0.2222],[0.3114,0.2417],[0.3377,0.2612],[0.3639,0.2417],[0.4042,0.2417],[0.4305,0.2222]],"lhp":[null,null,null,null,null,null]},"26":{"rh":[[93,8]],"lh":[[0,8]],"rhp":[[0.4684,0.2222]],"lhp":[null]},"27":{"rh":[[96,1],[0,1],[86,1],[0,1],[88,1],[0,1],[89,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"rhp":[[0.5746,0.1833],null,[0.6271,0.3002],null,[0.6796,0.2807],null,[0.732,0.2612],null],"lhp":[null,[0.6008,0.7093],null,[0.6533,0.7093],null,[0.7058,0.7093],null,[0.7583,0.7093]]},"28":{"rh":[[91,1],[0,1],[93,1],[0,1],[95,1],[0,1],[96,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"rhp":[[0.7946,0.2417],null,[0.8471,0.2222],null,[0.8995,0.2027],null,[0.952,0.1833],null],"lhp":[null,[0.8208,0.7093],null,[0.8733,0.7093],null,[0.9258,0.7093],null,[0.9783,0.7093]]},"29":{"rh":[[95,1],[0,1],[83,1],[0,1],[86,1],[0,1],[88,1],[0,1]],"lh":[[0,1],[84,1],[0,1],[84,1],[0,1],[84,1],[0,1],[84,1]],"rhp":[[0.0514,0.2027],null,[0.1087,0.3391],null,[0.1661,0.3001],null,[0.2235,0.2806],null],"lhp":[null,[0.0801,0.7093],null,[0.1375,0.7093],null,[0.1948,0.7093],null,[0.2521,0.7093]]},"30":{"rh":[[89,1],[0,1],[91,1],[0,1],[93,1],[0,1],[95,1],[0,1]],"lh":[[0,1],[83,1],[0,1],[83,1],[0,1],[83,1],[0,1],[83,1]],"rhp":[[0.2909,0.2612],null,[0.3483,0.2417],null,[0.4056,0.2222],null,[0.463,0.2027],null],"lhp":[null,[0.3196,0.7288],null,[0.377,0.7288],null,[0.4343,0.7288],null,[0.4916,0.7288]]},"31":{"rh":[[93,1],[0,1],[83,1],[0,1],[84,1],[0,1],[86,1],[0,1]],"lh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]],"rhp":[[0.5357,0.2222],null,[0.593,0.3391],null,[0.6504,0.3196],null,[0.7077,0.3001],null],"lhp":[null,[0.5643,0.7483],null,[0.6217,0.7483],null,[0.679,0.7483],null,[0.7364,0.7483]]},"32":{"rh":[[88,1],[0,1],[89,1],[0,1],[91,1],[0,1],[93,1],[0,1]],"lh":[[0,1],[81,1],[0,1],[81,1],[0,1],[81,1],[0,1],[81,1]],"rhp":[[0.7752,0.2806],null,[0.8325,0.2612],null,[0.8899,0.2417],null,[0.9472,0.2222],null],"lhp":[null,[0.8039,0.7483],null,[0.8612,0.7483],null,[0.9186,0.7483],null,[0.9759,0.7483]]},"33":{"rh":[[93,2],[92,1],[90,1],[92,2,1],[92,1],[93,1]],"lh":[[0,2],[0,1],[0,1],[0,2],[0,1],[0,1]],"rhp":[[0.1388,0.2222],[0.2578,0.2417],[0.3354,0.2612],[0.4129,0.2417],[0.5319,0.2417],[0.6095,0.2222]],"lhp":[null,null,null,null,null,null]},"34":{"rh":[[93,8]],"lh":[[0,8]],"rhp":[[0.7191,0.2222]],"lhp":[null]}}};
 const MIX_KEY="maddy-mix-measures-v1", PIN_KEY="maddy-grownup-pin-v1";
 const MEASURES=[];PIECE.lines.forEach((L,li)=>L.m.forEach(([n,x0,x1])=>MEASURES[n]={n,line:li,x0,x1}));
 const COUNT=MEASURES.length-1;
@@ -652,7 +668,8 @@ function drawSheet(){
   parts.forEach(p=>{const L=PIECE.lines[p.line];p.sx=Math.round(p.x0*L.w);p.sw=Math.round(p.x1*L.w)-p.sx;});
   cv.width=parts.reduce((a,p)=>a+p.sw,0);cv.height=H;
   const g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);
-  let x=0;parts.forEach(p=>{g.drawImage(lineImgs[p.line],p.sx,0,p.sw,H,x,0,p.sw,H);x+=p.sw;});
+  let x=0;parts.forEach(p=>{p.dx=x;g.drawImage(lineImgs[p.line],p.sx,0,p.sw,H,x,0,p.sw,H);x+=p.sw;});
+  if(window.drawCheckMarks)window.drawCheckMarks(g,parts);
   fitSheet();
 }
 function fitSheet(){
@@ -741,7 +758,7 @@ async function pinKey(k){
   if(s&&await hashPin(e,s.salt)===s.hash){pin.fails=0;closePin();unlockParent();}
   else{pin.fails++;if(pin.fails>=5){pin.until=Date.now()+30000;pin.fails=0;}pinShake("That's not it. Try again.");}
 }
-function unlockParent(){mix.unlocked=true;renderMix();Piano.load();}
+function unlockParent(){mix.unlocked=true;renderMix();if(window.isRemote&&isRemote())Piano.load();}
 function lockParent(){stopPlay();mix.unlocked=false;if(!document.getElementById("mixPanel").hidden)renderMix();}
 
 // ---- Sampled piano (Salamander Grand, bundled in piano/ for offline use) ----
@@ -798,7 +815,7 @@ function scheduleEvents(ctx,dest,ev,t0){
 let playing=null;
 function bpm(){return +document.getElementById("tempo").value;}
 function startPlay(){
-  if(!mix.unlocked&&!(window.isRemote&&isRemote()))return;
+  if(!(window.isRemote&&isRemote()))return;   // the piece only ever plays on the paired parent phone
   const ctx=getAudio();if(!ctx)return;
   Piano.load(ctx).then(()=>{
     stopPlay();
@@ -944,6 +961,7 @@ function pairListen(){
       pair.info.joined=true;pairSaveInfo();pairJoinedOnKid();
     }
     if(!snap.metadata.hasPendingWrites)adoptRemote(d);
+    if(window.onPairCheck)window.onPairCheck(d.chk||null);
     pairStatus();
   },err=>{console.warn("pair listen",err&&err.code);pair.serverSeen=false;pairStatus();});
 }
@@ -1069,8 +1087,281 @@ pairStatus();
 function updateRemoteUI(){
   const r=isRemote();
   const lb=$p("lockBtn");if(lb)lb.hidden=r;
-  const pr=$p("pairRow");if(pr)pr.hidden=r;
-  const an=$p("audioNote");if(an)an.textContent=r?"This phone plays the sound. Maddy's iPad shows the music only. No sound? Check the silent switch and volume.":"Only you can see this. No sound on iPad? Check the silent switch and volume.";
+  const pr=$p("pairRow");if(pr)pr.hidden=r||(typeof practiceMode==="function"&&practiceMode()==="solo");
+  ["playBtn","stopBtn","tempoRow"].forEach(id=>{const e=$p(id);if(e)e.hidden=!r;});
+  const an=$p("audioNote");if(an)an.textContent=r?"This phone plays the sound. Maddy's iPad shows the music only. No sound? Check the silent switch and volume.":"Only you can see this. The music never plays on the iPad. To hear it, choose With an adult or Both and pair your phone.";
   if(!$p("mixPanel").hidden&&typeof renderMix==="function"&&r!==updateRemoteUI.last){updateRemoteUI.last=r;renderMix();}
 }
+</script><script>
+const CHECKME_WORKLET_SRC="// Check me: single-note pitch detector (YIN with cumulative-mean normalisation and parabolic\n// interpolation) plus an attack/onset detector, running in an AudioWorklet. Works on input only:\n// nothing is ever sent to the speakers. Posts batches of frames [time, rms, f0, confidence, onset].\nclass CheckMeProcessor extends AudioWorkletProcessor{\n  constructor(){\n    super();\n    this.dec=sampleRate>32000?2:1;            // 48/44.1 kHz -> 24/22 kHz (enough for C7 at 2.1 kHz)\n    this.sr=sampleRate/this.dec;\n    this.W=Math.round(this.sr*0.016);         // integration window ~16 ms\n    this.maxTau=Math.ceil(this.sr/185);       // lowest note ~185 Hz (piece goes down to A3 = 220 Hz)\n    this.minTau=Math.floor(this.sr/2600);     // highest ~2.6 kHz (C7 = 2.1 kHz, stretched)\n    this.N=this.W+this.maxTau+2;\n    this.ring=new Float32Array(this.N);this.wi=0;this.buf=new Float32Array(this.N);this.fill=0;\n    this.hop=Math.round(this.sr*0.008);this.sinceHop=0;   // a frame every ~8 ms\n    this.d=new Float32Array(this.maxTau+2);\n    this.prevSample=0;this.half=0;this.halfAcc=0;\n    this.hf=[];this.lastOnset=-1;this.out=[];this.t=0;\n    // onset note check: spectrum just after the strike minus spectrum just before it\n    this.FN=2048;this.FFT=4096;this.H=8192;this.hist=new Float32Array(this.H);this.hi=0;this.count=0;\n    this.pend=[];this.re=new Float32Array(this.FFT);this.im=new Float32Array(this.FFT);\n    this.win=new Float32Array(this.FN);for(let i=0;i<this.FN;i++)this.win[i]=0.5-0.5*Math.cos(2*Math.PI*i/(this.FN-1));\n    this.port.onmessage=e=>{if(e.data===\"flush\")this.flush();};\n  }\n  flush(){if(this.out.length){this.port.postMessage(this.out);this.out=[];}}\n  analyse(time){\n    const N=this.N,W=this.W,maxTau=this.maxTau,d=this.d,b=this.buf,r=this.ring;\n    for(let i=0;i<N;i++)b[i]=r[(this.wi+i)%N];   // oldest -> newest\n    let e=0,h=0;\n    for(let i=N-this.hop;i<N;i++){e+=b[i]*b[i];const df=b[i]-b[i-1];h+=df*df;}\n    const rms=Math.sqrt(e/this.hop),hf=Math.sqrt(h/this.hop);\n    // onset: sudden rise of high-frequency energy (a hammer strike) vs the last ~50 ms\n    // (compared with the quietest of the last ~50 ms; a broadband jump in level also counts, for low notes)\n    let onset=0;const hist=this.hf,rh=this.rh||(this.rh=[]);\n    if(hist.length>=6){let m=Infinity,mr=Infinity;for(const v of hist)m=Math.min(m,v);for(const v of rh)mr=Math.min(mr,v);\n      const hit=(hf>m*1.9&&hf>0.0015)||(rms>mr*1.8&&rms>0.004&&hf>m*1.3);\n      if(hit&&(this.lastOnset<0||time-this.lastOnset>0.12)){onset=1;this.lastOnset=time;\n        const at=this.count-(this.hop>>1),gap=Math.round(this.sr*0.005);\n        if(at-this.hop-gap-this.FN>0)this.pend.push({time,pre:at-this.hop-gap-this.FN,post:at+gap});}}\n    hist.push(hf);if(hist.length>6)hist.shift();rh.push(rms);if(rh.length>6)rh.shift();\n    // YIN\n    let f0=0,conf=0;\n    if(rms>0.0008){\n      const off=N-W-maxTau-1;\n      d[0]=1;let run=0,tau=-1;\n      for(let t=1;t<=maxTau;t++){\n        let s=0;for(let j=0;j<W;j++){const x=b[off+j]-b[off+j+t];s+=x*x;}\n        run+=s;d[t]=run>0?s*t/run:1;\n      }\n      for(let t=this.minTau;t<maxTau;t++){if(d[t]<0.15){while(t+1<maxTau&&d[t+1]<d[t])t++;tau=t;break;}}\n      if(tau<0){let best=this.minTau;for(let t=this.minTau;t<maxTau;t++)if(d[t]<d[best])best=t;tau=best;}\n      const a=d[tau-1],c=d[tau+1],m=d[tau],den=a+c-2*m;\n      const tt=den>0?tau+(a-c)/(2*den):tau;\n      f0=this.sr/tt;conf=Math.max(0,1-m);\n    }\n    this.out.push([+time.toFixed(4),+rms.toFixed(5),+f0.toFixed(2),+conf.toFixed(3),onset,+hf.toFixed(5)]);\n    if(this.out.length>=6)this.flush();\n  }\n  spectrum(start){ // magnitude spectrum of FN samples from absolute index start (Hann, zero-padded to FFT)\n    const n=this.FFT,re=this.re,im=this.im,H=this.H,base=this.count-start;\n    for(let i=0;i<n;i++){re[i]=i<this.FN?this.hist[((this.hi-base+i)%H+H)%H]*this.win[i]:0;im[i]=0;}\n    for(let i=1,j=0;i<n;i++){let b=n>>1;for(;j&b;b>>=1)j^=b;j^=b;if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}\n    for(let len=2;len<=n;len<<=1){const a=-2*Math.PI/len,wr=Math.cos(a),wi=Math.sin(a);\n      for(let i=0;i<n;i+=len){let cr=1,ci=0;for(let k=0;k<len>>1;k++){const p=i+k,q=p+(len>>1);\n        const tr=re[q]*cr-im[q]*ci,ti=re[q]*ci+im[q]*cr;re[q]=re[p]-tr;im[q]=im[p]-ti;re[p]+=tr;im[p]+=ti;\n        const nc=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=nc;}}}\n    const m=new Float32Array(n>>1);for(let i=0;i<n>>1;i++)m[i]=Math.hypot(re[i],im[i]);return m;\n  }\n  onsetNote(p){\n    if(this.count-p.pre>this.H)return;\n    const A=this.spectrum(p.post),B=this.spectrum(p.pre),n=A.length,D=new Float32Array(n);\n    let sd=0,sa=0;for(let i=0;i<n;i++){D[i]=Math.max(0,A[i]-1.1*B[i]);sd+=D[i];sa+=A[i];}\n    if(sa<=0)return;\n    const bin=this.sr/this.FFT;\n    const hsum=X=>{const S=[];for(let m=55;m<=100;m++){const f0=440*Math.pow(2,(m-69)/12);let v=0;\n      for(let h=1;h<=8;h++){const f=h*f0;if(f>this.sr*0.45)break;\n        const lo=Math.floor(f*0.98/bin),hi=Math.ceil(f*1.02/bin);let mx=0;for(let k=lo;k<=hi&&k<n;k++)if(X[k]>mx)mx=X[k];v+=mx/h;}\n      S[m]=v;}return S;};\n    const S=hsum(D);\n    let best=55;for(let m=55;m<=100;m++)if(S[m]>S[best])best=m;\n    // was the same pitch already the loudest thing ringing? (then this is likely a swell, not a new strike)\n    let sb=0;for(let i=0;i<n;i++)sb+=B[i];\n    let same=0;if(sb>0.3*sa){const P=hsum(B);let bp=55;for(let m=55;m<=100;m++)if(P[m]>P[bp])bp=m;same=bp===best?1:0;}\n    let second=0;for(let m=55;m<=100;m++){const k=Math.abs(m-best);if(k&&k!==12&&k!==24&&k!==19&&S[m]>second)second=S[m];}\n    this.port.postMessage({n:[+p.time.toFixed(4),best,+(S[best]/(second||1e-9)).toFixed(2),+(sd/sa).toFixed(3),same]});\n  }\n  process(inputs){\n    const inp=inputs[0]&&inputs[0][0];\n    const q=128;\n    if(inp){\n      const r=this.ring;\n      for(let i=0;i<inp.length;i++){\n        let s=inp[i];\n        if(this.dec===2){this.halfAcc+=s;if(++this.half<2)continue;s=this.halfAcc/2;this.half=0;this.halfAcc=0;}\n        r[this.wi]=s;this.wi=(this.wi+1)%this.N;\n        this.hist[this.hi]=s;this.hi=(this.hi+1)%this.H;this.count++;\n        if(this.pend.length&&this.count>=this.pend[0].post+this.FN)this.onsetNote(this.pend.shift());\n        if(this.fill<this.N)this.fill++;\n        if(++this.sinceHop>=this.hop){this.sinceHop=0;if(this.fill>=this.N)this.analyse(currentTime+i/sampleRate);}\n      }\n    }\n    return true;\n  }\n}\nregisterProcessor(\"checkme\",CheckMeProcessor);\n";
+"use strict";
+// ---- Check me: listen while Maddy plays the current chunk and mark each note ----
+// Follows the known score as one combined sequence (the hands never start a note together in this
+// piece), with no timing requirement. Mic is open only while listening.
+const CHECK={STABLE:0.10,WRONG_STABLE:0.12,TOL:0.5,CONF:0.80,WRONG_CONF:0.90,IDLE:60};
+const MODE_KEY="maddy-practice-mode";
+function practiceMode(){const m=localStorage.getItem(MODE_KEY);if(m==="solo"||m==="adult"||m==="both")return m;
+  if(isRemote())return "adult";
+  // first run: an iPad that is already paired keeps working as before; otherwise start with Solo
+  const d=(pair.info)?"adult":"solo";try{localStorage.setItem(MODE_KEY,d);}catch(e){}return d;}
+function checkAllowed(){return practiceMode()!=="adult"&&!isRemote();}
+
+// Expected notes for a chunk, in playing order, ties merged (a tied note is not played again).
+function chunkSeq(measures){
+  const seq=[];
+  measures.forEach((n,mi)=>{
+    ["rh","lh"].forEach(hand=>{
+      let pos=0,tiedFrom=false;const M=PIECE.notes[n],ps=M[hand+"p"]||[];
+      M[hand].forEach(([midi,d,tie],k)=>{
+        if(midi&&!tiedFrom){const p=ps[k]||[0,0];seq.push({midi,t:mi*8+pos,n,hand,line:MEASURES[n].line,xf:p[0],yf:p[1]});}
+        tiedFrom=!!(midi&&tie);pos+=d;
+      });
+    });
+  });
+  seq.sort((a,b)=>a.t-b.t);
+  return seq;
+}
+// Frames -> note events. Emits {m (fractional MIDI), conf, long} once a pitch has held ~100 ms
+// (and again with long=true at ~120 ms, which is needed before calling anything wrong).
+function NoteSegmenter(emit){
+  let run=null,rmsHist=[],floor=0.0015,ids=0,nf=0,lastOn=-9;
+  function close(){run=null;}
+  this.frame=function(f){
+    const [t,rms,f0,conf,onset]=f;
+    // noise floor: the quietest moments of the last ~6 s (YIN confidence already rejects unpitched noise)
+    rmsHist.push(rms);if(rmsHist.length>750)rmsHist.shift();
+    if(rmsHist.length>=25&&(++nf%25===0)){const s=rmsHist.slice().sort((a,b)=>a-b);floor=Math.max(0.001,s[Math.floor(s.length*0.05)]*1.5);}
+    if(onset){close();lastOn=t;}
+    const voiced=conf>=CHECK.CONF&&rms>floor&&f0>180&&f0<2700;
+    if(!voiced){if(run&&t-run.last>0.05)close();return;}
+    const m=69+12*Math.log2(f0/440);
+    if(run&&Math.abs(m-run.ref)<=0.6){run.ms.push(m);run.cs.push(conf);run.last=t;}
+    else{run={id:++ids,on:t-lastOn<0.15?lastOn:null,start:t,last:t,ref:m,ms:[m],cs:[conf],sent:0};}
+    const dur=t-run.start;
+    if(run.ms.length>=3){const s=run.ms.slice().sort((a,b)=>a-b);run.ref=s[s.length>>1];}
+    const med=run.ref,cavg=run.cs.reduce((a,b)=>a+b,0)/run.cs.length;
+    if(run.sent===0&&dur>=CHECK.STABLE){run.sent=1;emit({id:run.id,on:run.on,start:run.start,m:med,conf:cavg,long:false,t});}
+    if(run.sent===1&&dur>=CHECK.WRONG_STABLE){run.sent=2;emit({id:run.id,on:run.on,start:run.start,m:med,conf:cavg,long:true,t});}
+  };
+}
+// Note events -> marks: 'g' right, 't' try again, 'u' not sure (shown as nothing), '.' not yet.
+function ScoreFollower(seq,onChange){
+  const marks=seq.map(()=>".");let i=0;const used=new Set();
+  const near=(m,x)=>Math.abs(m-x)<=CHECK.TOL;
+  const octaveish=(m,x)=>[12,-12,24,-24,19,-19].some(k=>near(m,x+k));
+  this.marks=marks;
+  this.done=()=>i>=seq.length;
+  this.index=()=>i;
+  const usedOn=new Set();const onKey=t=>t==null?null:Math.round(t*1000);
+  const consume=ev=>{used.add(ev.id);if(ev.on!=null)usedOn.add(onKey(ev.on));};
+  // Diff-spectrum check at a strike: what got louder right at the onset. Used only to confirm the
+  // expected note (it sees a re-struck note under other ringing notes, where YIN can't).
+  const strike=new Map();   // onset -> {m: pitch that got louder, frac: share of the spectrum that is new energy}
+  this.onsetNote=function(d){
+    strike.set(onKey(d.on),d);
+    if(strike.size>40)strike.delete(strike.keys().next().value);
+    if(i>=seq.length||usedOn.has(onKey(d.on)))return;
+    const rep=i>0&&seq[i-1].midi===seq[i].midi;   // same pitch again: needs a clearly new strike
+    if(d.m===Math.round(seq[i].midi)&&d.sal>=1.3&&d.frac>=(rep?0.2:0.12)){usedOn.add(onKey(d.on));marks[i]="g";i++;onChange("right");}
+  };
+  this.note=function(ev){
+    if(i>=seq.length||used.has(ev.id)||(ev.on!=null&&usedOn.has(onKey(ev.on))))return;
+    const exp=seq[i].midi,m=ev.m;
+    // Was this pitch started by a real new strike? (a confirmed, unused onset just before it appeared)
+    let fresh=false,struck=false;const s0=onKey(ev.start);
+    strike.forEach((d,k)=>{if(usedOn.has(k)||k>s0+10||k<s0-160||d.frac<0.12)return;struck=true;
+      if(!d.same&&Math.abs(d.m-Math.round(m))%12===0)fresh=true;});
+    if(near(m,exp)){
+      if(i>0&&seq[i-1].midi===exp&&!struck)return;   // same pitch again: wait for a real new strike
+      consume(ev);marks[i]="g";i++;onChange("right");return;}
+    for(let k=1;k<=2;k++)if(i-k>=0&&near(m,seq[i-k].midi)&&!(fresh&&i+1<seq.length&&near(m,seq[i+1].midi))){if(ev.long)consume(ev);return;} // still ringing / tie re-strike
+    if(i+1<seq.length&&near(m,seq[i+1].midi)){   // she played the next note: this one was missed by the mic
+      if(!ev.long||!fresh)return;
+      consume(ev);if(marks[i]===".")marks[i]="u";marks[i+1]="g";i+=2;onChange("right");return;}
+    // she carried on two notes ahead (after a slip, or the mic missed one): catch up
+    if(i+2<seq.length&&near(m,seq[i+2].midi)&&!near(m,seq[i+1].midi)){
+      if(!ev.long||!fresh||ev.conf<CHECK.WRONG_CONF)return;
+      consume(ev);if(marks[i]===".")marks[i]="u";marks[i+1]="u";marks[i+2]="g";i+=3;onChange("right");return;}
+    if(octaveish(m,exp)){if(ev.long){consume(ev);marks[i]="u";i++;onChange("unsure");}return;}
+    // "try again" only for a clear, steady, freshly struck pitch that isn't one still ringing from before
+    const ringing=[3,4].some(k=>i-k>=0&&near(m,seq[i-k].midi));
+    // and only for a near miss (a neighbouring key); anything farther off is more likely the mic losing its place
+    if(ev.long&&fresh&&!ringing&&Math.abs(m-exp)<=2.5&&ev.conf>=CHECK.WRONG_CONF&&Math.abs(m-Math.round(m))<=0.3){
+      consume(ev);marks[i]="t";onChange("retry");return;
+    }
+  };
+
+}
+
+// ---- UI + mic ----
+const chk={state:"idle",follower:null,seq:null,key:"",ctx:null,stream:null,node:null,src:null,lastNote:0,idleTimer:null,retry:false,fixed:0};
+const $c=id=>document.getElementById(id);
+function chunkKey(){return mix.size+":"+mix.order[mix.pos];}
+function setCheckMsg(t,cls){const e=$c("checkMsg");e.textContent=t||"";e.className="check-msg"+(cls?" "+cls:"");}
+function updateCheckUI(){
+  const show=checkAllowed()&&!$c("mixPanel").hidden;
+  $c("checkRow").hidden=!show;
+  const b=$c("checkBtn");
+  $c("checkLabel").textContent=chk.state==="listening"?"⏹ Stop listening":chk.state==="starting"?"Starting the microphone…":"🎤 Check me";
+  b.classList.toggle("listening",chk.state==="listening");
+  b.disabled=chk.state==="starting";
+  $c("micDot").hidden=chk.state!=="listening";
+}
+window.drawCheckMarks=function(g,parts){
+  let marks=null,seq=null;
+  if(isRemote()){if(!remoteChk||remoteChk.key!==chunkKey())return;seq=chunkSeq(current());marks=remoteChk.marks.split("");}
+  else{if(!chk.follower||chk.key!==chunkKey())return;seq=chk.seq;marks=chk.follower.marks;}
+  const H=PIECE.lines[0].h;
+  seq.forEach((s,k)=>{
+    const mk=marks[k];if(mk!=="g"&&mk!=="t")return;
+    const p=parts.find(p=>p.line===s.line);if(!p)return;
+    const L=PIECE.lines[s.line],x=p.dx+(s.xf*L.w-p.sx),y=s.yf*H;
+    if(x<p.dx-5||x>p.dx+p.sw+5)return;
+    g.save();g.lineWidth=9;
+    if(mk==="g"){g.strokeStyle="rgba(40,150,90,.95)";g.fillStyle="rgba(60,180,110,.22)";}
+    else{g.strokeStyle="rgba(240,150,40,.95)";g.fillStyle="rgba(255,190,90,.25)";}
+    g.beginPath();g.arc(x,y,34,0,Math.PI*2);g.fill();g.stroke();
+    g.restore();
+  });
+};
+function checkSummary(){
+  const M=chk.follower.marks,n=M.length,right=M.filter(x=>x==="g").length,tries=M.filter(x=>x==="t").length;
+  return {n,right,tries};
+}
+function pushCheck(){
+  if(practiceMode()!=="both"||!pair.info||!pair.info.joined||!pair.db)return;
+  const st=chk.state==="listening"?"listening":chk.follower?(chk.follower.done()?"done":"stopped"):"idle";
+  const data={st,key:chk.key||chunkKey(),marks:chk.follower?chk.follower.marks.join(""):""};
+  // A separate update, so the chunk sync keeps working even where this field isn't allowed yet.
+  pairRef(pair.info.code).update({chk:data}).catch(e=>console.warn("check push",e&&e.code));
+}
+function onCheckChange(kind){
+  const s=checkSummary();
+  if(kind==="right"){chk.retry=false;setCheckMsg(chk.follower.done()?"":"✓ "+s.right+" of "+s.n,"good");}
+  if(kind==="retry"){chk.retry=true;setCheckMsg("Try that note again 🙂","retry");}
+  drawSheet();
+  if(chk.follower.done())finishCheck();
+  pushCheck();
+}
+function finishCheck(){
+  const s=checkSummary();
+  stopListening(false);
+  if(s.tries===0&&s.right===s.n)setCheckMsg("⭐ All "+s.n+" notes right! Great job!","good big");
+  else if(s.tries===0)setCheckMsg("⭐ Nice playing! "+s.right+" of "+s.n+" notes checked.","good");
+  else setCheckMsg("Nice playing! Try the orange "+(s.tries===1?"note":"notes")+" again.","retry");
+  pushCheck();
+}
+async function startListening(){
+  if(!checkAllowed())return;
+  stopPlay&&stopPlay();
+  const msg=t=>setCheckMsg(t,"warn");
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){msg("This browser can't use the microphone. Try Safari on the iPad.");return;}
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC||!window.AudioWorkletNode){msg("This browser is too old for Check me. Updating iPadOS should fix it.");return;}
+  chk.state="starting";updateCheckUI();setCheckMsg("");
+  let streamP=null;
+  try{
+    // Its own context, created inside the tap so iOS lets it run. It never makes a sound.
+    if(!chk.ctx||chk.ctx.state==="closed"){chk.ctx=new AC();chk.moduleLoaded=false;}
+    const ctx=chk.ctx,resumed=ctx.resume().catch(()=>{});
+    streamP=navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false,channelCount:1}});
+    streamP.catch(()=>{});
+    if(!chk.moduleLoaded){
+      try{const url=URL.createObjectURL(new Blob([CHECKME_WORKLET_SRC],{type:"application/javascript"}));await ctx.audioWorklet.addModule(url);}
+      catch(e){await ctx.audioWorklet.addModule("checkme-worklet.js");}
+      chk.moduleLoaded=true;
+    }
+    const stream=await streamP;await resumed;
+    if(chk.state!=="starting"){stream.getTracks().forEach(t=>t.stop());return;}
+    chk.stream=stream;
+    chk.src=ctx.createMediaStreamSource(stream);
+    chk.node=new AudioWorkletNode(ctx,"checkme",{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
+    const mute=ctx.createGain();mute.gain.value=0;   // keeps the node running; nothing reaches the speakers
+    chk.src.connect(chk.node);chk.node.connect(mute);mute.connect(ctx.destination);chk.mute=mute;
+    chk.seq=chunkSeq(current());chk.key=chunkKey();chk.retry=false;
+    chk.follower=new ScoreFollower(chk.seq,onCheckChange);
+    const seg=new NoteSegmenter(ev=>{chk.lastNote=performance.now();chk.follower.note(ev);});
+    chk.node.port.onmessage=e=>{if(chk.state!=="listening")return;
+      if(e.data.n){const[on,m,sal,frac,same]=e.data.n;chk.lastNote=performance.now();chk.follower.onsetNote({on,m,sal,frac,same});return;}
+      e.data.forEach(f=>seg.frame(f));};
+    chk.state="listening";chk.lastNote=performance.now();
+    clearInterval(chk.idleTimer);
+    chk.idleTimer=setInterval(()=>{if(chk.state==="listening"&&performance.now()-chk.lastNote>CHECK.IDLE*1000){stopListening(true);setCheckMsg("Stopped listening. Tap Check me when you're ready.","");}},1000);
+    setCheckMsg("Listening… play this part when you're ready 🎹","");
+    updateCheckUI();drawSheet();pushCheck();
+  }catch(e){
+    chk.state="idle";updateCheckUI();releaseMic();
+    if(streamP)streamP.then(st=>st.getTracks().forEach(t=>t.stop()),()=>{});
+    const n=e&&e.name;
+    if(n==="NotAllowedError"||n==="SecurityError"||n==="PermissionDeniedError")
+      msg("Check me needs the microphone. Ask a grown-up to allow it: Settings › Safari › Microphone (or tap ᴀA › Website Settings).");
+    else if(n==="NotFoundError"||n==="OverconstrainedError")msg("No microphone was found on this device.");
+    else if(n==="NoWorklet")msg("This browser is too old for Check me. Updating iPadOS should fix it.");
+    else msg("The microphone didn't start. Close the app and try again.");
+  }
+}
+function releaseMic(){
+  try{chk.node&&(chk.node.port.onmessage=null,chk.node.disconnect());}catch(e){}
+  try{chk.src&&chk.src.disconnect();chk.mute&&chk.mute.disconnect();}catch(e){}
+  if(chk.stream)chk.stream.getTracks().forEach(t=>t.stop());
+  if(chk.ctx&&chk.ctx.state==='running')chk.ctx.suspend().catch(()=>{});
+  chk.stream=null;chk.node=null;chk.src=null;chk.mute=null;clearInterval(chk.idleTimer);
+}
+function stopListening(userStop){
+  if(chk.state==="idle")return;
+  chk.state="idle";releaseMic();updateCheckUI();
+  if(userStop&&chk.follower&&!chk.follower.done()){
+    const s=checkSummary();setCheckMsg(s.right?"Stopped. "+s.right+" of "+s.n+" notes right so far.":"Stopped listening.","");}
+  pushCheck();
+}
+function resetCheck(){stopListening(false);chk.follower=null;chk.seq=null;chk.key="";setCheckMsg("");}
+$c("playBtn").addEventListener("click",()=>stopListening(true),true);  // never self-check the piano sound
+$c("checkBtn").addEventListener("click",()=>{chk.state==="listening"?stopListening(true):startListening();});
+document.addEventListener("visibilitychange",()=>{if(document.hidden)stopListening(true);});
+// new chunk / mode change -> clear marks, mic off
+const _renderMix=renderMix;
+renderMix=function(){
+  if(chk.key&&chk.key!==chunkKey())resetCheck();
+  _renderMix();updateCheckUI();updateModeUI();if(isRemote())renderRemoteCheck();
+};
+const _setMode=setMode;
+setMode=function(m){if(m!=="mix")resetCheck();_setMode(m);updateCheckUI();};
+
+// ---- Practice mode (parent PIN view on the iPad) ----
+function updateModeUI(){
+  const m=practiceMode();
+  document.querySelectorAll("#modeRow button").forEach(b=>b.classList.toggle("on",b.dataset.pm===m));
+  const pr=$c("pairRow");if(pr)pr.hidden=isRemote()||m==="solo";
+  $c("modeRow").hidden=isRemote();
+}
+document.querySelectorAll("#modeRow button").forEach(b=>b.addEventListener("click",()=>{
+  const m=b.dataset.pm;
+  if(m==="solo"&&pair.info){
+    if(!confirm("Solo practice doesn't use the parent phone. Unpair it?"))return;
+    if(pair.db)pairRef(pair.info.code).delete().catch(()=>{});pairEnded(null);
+  }
+  localStorage.setItem(MODE_KEY,m);
+  if(m==="adult")resetCheck();
+  updateModeUI();updateCheckUI();pushCheck();
+}));
+
+// ---- Parent phone: show the results live ----
+let remoteChk=null;
+window.onPairCheck=function(c){
+  if(!isRemote())return;
+  const was=JSON.stringify(remoteChk);remoteChk=c&&typeof c.marks==="string"?c:null;
+  if(JSON.stringify(remoteChk)!==was){renderRemoteCheck();if(!$c("mixPanel").hidden)drawSheet();}
+};
+function renderRemoteCheck(){
+  const e=$c("remoteCheck");if(!e)return;
+  if(!isRemote()||!remoteChk||remoteChk.key!==chunkKey()){e.hidden=true;return;}
+  const M=remoteChk.marks.split(""),n=M.length,r=M.filter(x=>x==="g").length,t=M.filter(x=>x==="t").length;
+  let s;
+  if(remoteChk.st==="listening")s="🎤 Maddy is checking: "+r+" of "+n+" right"+(t?", "+t+" to try again":"");
+  else if(remoteChk.st==="done")s=t?"Maddy finished: "+r+" of "+n+" right, "+t+" to try again":(r===n?"⭐ Maddy got all "+n+" notes right!":"Maddy finished: "+r+" of "+n+" checked");
+  else s="Maddy stopped checking: "+r+" of "+n+" right"+(t?", "+t+" to try again":"");
+  e.textContent=s;e.hidden=false;
+}
+updateModeUI();updateCheckUI();
+window.CheckMe={chunkSeq,NoteSegmenter,ScoreFollower,CHECK,chk,practiceMode,WORKLET:CHECKME_WORKLET_SRC};
 </script></body></html>
