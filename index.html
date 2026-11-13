@@ -521,8 +521,9 @@ let audioCtx=null;
 function getAudio(){
   const AC=window.AudioContext||window.webkitAudioContext;
   if(!AC)return null;
-  if(!audioCtx)audioCtx=new AC();
-  if(audioCtx.state==="suspended")audioCtx.resume();
+  if(!audioCtx||audioCtx.state==="closed")audioCtx=new AC();
+  // iOS Safari reports "interrupted" (not "suspended") after a call, app switch or screen lock: resume either way
+  if(audioCtx.state!=="running"){const r=audioCtx.resume();if(r&&r.catch)r.catch(()=>{});}
   return audioCtx;
 }
 function playCorrectNote(card){
@@ -817,19 +818,38 @@ function scheduleEvents(ctx,dest,ev,t0){
 }
 let playing=null;
 function bpm(){return +document.getElementById("tempo").value;}
-function startPlay(){
+// Wait (briefly) for the audio clock to be running. Resolves true/false.
+function audioRunning(ctx,ms){
+  if(ctx.state==="running")return Promise.resolve(true);
+  let r;try{r=ctx.resume();}catch(e){r=null;}
+  return Promise.race([Promise.resolve(r).catch(()=>{}),new Promise(res=>setTimeout(res,ms))]).then(()=>ctx.state==="running");
+}
+// A brand-new audio context (an iOS one stuck "interrupted" never comes back); the piano is decoded again into it.
+function freshAudio(){
+  try{audioCtx&&audioCtx.close().catch(()=>{});}catch(e){}
+  audioCtx=null;Piano.promise=null;Piano.buf={};Piano.ready=false;
+  return getAudio();
+}
+let playGen=0;
+async function startPlay(){
   if(!(window.isRemote&&isRemote()))return;   // the piece only ever plays on the paired parent phone
-  const ctx=getAudio();if(!ctx)return;
-  Piano.load(ctx).then(()=>{
+  const gen=++playGen;
+  let ctx=getAudio();if(!ctx)return;          // getAudio() calls resume() right here, inside the tap
+  if(ctx.state==="interrupted")ctx=freshAudio();   // still inside the tap, so iOS lets the new one start
+  if(!(await audioRunning(ctx,600))){ctx=freshAudio();await audioRunning(ctx,600);}
+  try{await Piano.load(ctx);}catch(e){return;}
+  if(gen!==playGen)return;                      // tapped again meanwhile
+  if(!(await audioRunning(ctx,600))){window.__lastPlay={blocked:ctx.state};return;}   // never schedule on a paused clock
+  {
     stopPlay();
     const master=ctx.createGain();master.gain.value=2.4;master.connect(ctx.destination);
     const ev=chunkEvents(current(),bpm()),t0=ctx.currentTime+0.08;
     const srcs=scheduleEvents(ctx,master,ev,t0);
     const end=ev.reduce((a,x)=>Math.max(a,x.t+x.dur),0);
     playing={master,srcs,timer:setTimeout(()=>{playing=null;updatePlayBtn();},(end+0.6)*1000)};
-    window.__lastPlay={events:ev.length,measures:current().slice(),bpm:bpm()};
+    window.__lastPlay={events:ev.length,measures:current().slice(),bpm:bpm(),state:ctx.state,t0};
     updatePlayBtn();
-  }).catch(()=>{});
+  }
 }
 function stopPlay(){
   if(!playing)return;
@@ -1357,10 +1377,11 @@ function resetCheck(){stopListening(false);chk.follower=null;chk.seq=null;chk.ke
 $c("playBtn").addEventListener("click",()=>stopListening(true),true);  // never self-check the piano sound
 $c("checkBtn").addEventListener("click",()=>{(chk.state==="listening"||chk.state==="advancing")?stopListening(true):startListening();});
 // any manual move cancels a pending auto-advance right away (the new chunk then starts listening itself)
-function manualMoveStart(){if(chk.advTimer){clearTimeout(chk.advTimer);chk.advTimer=null;}}
-function manualMoveEnd(){if(chk.state==="advancing"&&!chk.advTimer)stopListening(false);}   // tapped but nothing moved: the chunk is done, mic off
+function manualMoveStart(){chk.tapMove=true;if(chk.advTimer){clearTimeout(chk.advTimer);chk.advTimer=null;}}
+function manualMoveEnd(){chk.tapMove=false;if(chk.state==="advancing"&&!chk.advTimer)stopListening(false);}   // tapped but nothing moved: the chunk is done, mic off
 ["mixNext","mixBack","mixRestart"].forEach(id=>{$c(id).addEventListener("click",manualMoveStart,true);$c(id).addEventListener("click",manualMoveEnd);});
 $c("mixRestart").addEventListener("click",()=>{chk.forceMove=true;},true);   // Start over can land on the same chunk: still a fresh start
+$c("mixRestart").addEventListener("click",()=>{chk.forceMove=false;});        // (if the grown-up said no to the confirm)
 document.querySelectorAll("#sizes button").forEach(b=>{b.addEventListener("click",manualMoveStart,true);b.addEventListener("click",manualMoveEnd);});
 // grown-up toggles
 [["autoListen",AUTO_LISTEN_KEY,autoListenOn],["autoAdvance",AUTO_ADVANCE_KEY,autoAdvanceOn]].forEach(([id,key,get])=>{
@@ -1370,6 +1391,7 @@ document.querySelectorAll("#sizes button").forEach(b=>{b.addEventListener("click
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stopListening(true);});
 // new chunk / mode change -> clear marks, mic off
 const _renderMix=renderMix;
+try{chk.viewKey=chunkKey();}catch(e){}   // the chunk on screen at load (not a "move")
 renderMix=function(){
   const k=chunkKey(),force=!!chk.forceMove,moved=chk.viewKey!==null&&(chk.viewKey!==k||force);chk.viewKey=k;chk.forceMove=false;
   let carry=false;
@@ -1378,7 +1400,7 @@ renderMix=function(){
   _renderMix();updateCheckUI();updateModeUI();if(isRemote())renderRemoteCheck();
   if(moved&&checkAllowed()&&autoListenOn()&&!$c("mixPanel").hidden){
     if(carry)continueOnNewChunk();
-    else{const tap=!!(navigator.userActivation&&navigator.userActivation.isActive);startListening({quiet:!tap});}
+    else startListening({quiet:!chk.tapMove});   // moved by her tap: show mic problems; moved by the phone: stay quiet if the browser says no
   }
 };
 const _setMode=setMode;
