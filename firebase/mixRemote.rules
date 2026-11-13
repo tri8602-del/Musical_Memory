@@ -3,16 +3,25 @@
 //   match /databases/{database}/documents { ... }
 // next to the existing Territory Tracker rules. Leave those rules as they are, then click Publish.
 // It lets the Musical Memory parent-phone pairing use its own "mixRemote" collection.
-// Each document holds only which sheet-music chunk is showing (no names or personal data).
+// Each document holds only which sheet-music chunk is showing and, in "Both" practice mode, the
+// Check me marks for it (right / try again per note), so the phone can show them. No names or personal data.
     match /mixRemote/{code} {
       function okCode() { return code.matches('^[A-HJ-NP-Z2-9]{8}$'); }
       function okData(d) {
-        return d.keys().hasOnly(['sz','order','pos','round','rev','by','v','kidAt','parentAt'])
+        return d.keys().hasOnly(['sz','order','pos','round','rev','by','v','kidAt','parentAt','chk'])
           && d.sz in ['1','2','3','line']
           && d.order is list && d.order.size() <= 40
           && d.pos is int && d.pos >= 0 && d.pos < 40
           && d.round is int && d.rev is int
-          && d.by is string && d.by.size() <= 40;
+          && d.by is string && d.by.size() <= 40
+          && (!('chk' in d) || okChk(d.chk));
+      }
+      // Check me results shown live on the parent phone (iPad -> phone).
+      function okChk(c) {
+        return c is map && c.keys().hasOnly(['st','key','marks'])
+          && c.st in ['idle','listening','stopped','done']
+          && c.key is string && c.key.size() <= 16
+          && c.marks is string && c.marks.size() <= 64;
       }
       allow get: if request.auth != null && okCode();
       allow list: if false;
