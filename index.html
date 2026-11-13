@@ -390,7 +390,20 @@ button{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
   .mix-nav button,.parent-bar button{padding:8px 12px}
 }
 .mixpanel .next,.mixpanel .reset{grid-column:auto;grid-row:auto}
-</style></head><body><div class="app"><button class="grownup" id="grownup" type="button" aria-label="Grown-ups: hold to see progress">⋯</button><h1>Maddy's Do-Re-Mi Trainer</h1><div class="modes" id="modes"><button type="button" data-mode="notes">🎵 Note Cards</button><button type="button" data-mode="mix">🧩 Mix Up the Measures</button></div><div class="panel" id="notePanel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/30</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><div class="grownup-row"><button class="reset" id="reset" type="button">Reset progress</button><button class="reset" id="hideProgress" type="button">Hide progress</button></div></div><div class="panel mixpanel" id="mixPanel" hidden><div class="sizes" id="sizes"><button type="button" data-size="1">1 measure</button><button type="button" data-size="2">2 measures</button><button type="button" data-size="3">3 measures</button><button type="button" data-size="line">1 line</button></div><div class="mix-count" id="mixCount"></div><div class="sheet-card" id="sheetCard"><div class="mtag" id="mtag" hidden></div><canvas id="sheet" aria-label="Sheet music"></canvas></div><div class="parent-bar" id="parentBar" hidden><button type="button" class="play" id="playBtn">▶ Play</button><button type="button" id="stopBtn">■ Stop</button><label>Tempo <input type="range" id="tempo" min="40" max="132" step="2" value="100"><span id="tempoVal">100</span></label><button type="button" id="lockBtn">🔒 Lock</button><small id="audioNote">Only you can see this. No sound on iPad? Check the silent switch and volume.</small></div><div class="mix-done" id="mixDone"></div><div class="mix-nav"><button type="button" id="mixBack">← Back</button><button type="button" class="next" id="mixNext">Next →</button></div><button class="reset" id="mixRestart" type="button">Start over (new shuffle)</button></div><div class="pinwrap" id="pinWrap" hidden><div class="pinbox" id="pinBox"><h2 id="pinTitle">Grown-ups only</h2><p id="pinMsg"></p><div class="pindots" id="pinDots"><i></i><i></i><i></i><i></i></div><div class="pinpad" id="pinPad"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><span></span><button type="button">0</button><button type="button" data-k="del" aria-label="Delete">⌫</button></div><button type="button" class="cancel" id="pinCancel">Cancel</button></div></div></div><script>
+/* ---- Parent phone pairing ---- */
+.remote-bar{position:relative;z-index:1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;background:#eef6ff;border:1px solid #cfe2fb;border-radius:14px;padding:7px 10px;font-size:14px}
+.remote-bar button{padding:6px 12px;font-size:14px}
+.rstatus{font-weight:700}
+.rstatus.ok{color:#287044}
+.rstatus.off{color:#a13e3e}
+.kid-net{text-align:center;color:#7b7488;font-size:13px;font-weight:600}
+.pair-row{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;color:#6b5200}
+.pair-row button{padding:8px 12px;font-size:14px}
+.paircode{font:800 34px/1.1 ui-monospace,Menlo,monospace;letter-spacing:3px;color:#4b3c78;background:#f5f2ff;border-radius:14px;padding:12px 6px;margin:6px 0 8px}
+#joinCode{width:100%;font:800 26px ui-monospace,Menlo,monospace;letter-spacing:3px;text-align:center;text-transform:uppercase;padding:10px;border:2px solid #d9d0f5;border-radius:14px;margin:4px 0 8px}
+#joinGo{width:100%}
+.pinbox .phone-link{display:block;margin:4px auto 0;color:#7357d9}
+</style></head><body><div class="app"><button class="grownup" id="grownup" type="button" aria-label="Grown-ups: hold to see progress">⋯</button><h1>Maddy's Do-Re-Mi Trainer</h1><div class="modes" id="modes"><button type="button" data-mode="notes">🎵 Note Cards</button><button type="button" data-mode="mix">🧩 Mix Up the Measures</button></div><div class="panel" id="notePanel"><div class="stats"><div class="stat"><b id="streak">0</b><small>streak</small></div><div class="stat"><b id="accuracy">—</b><small>accuracy</small></div><div class="stat"><b id="mastered">0/30</b><small>mastered</small></div></div><div class="progress"><div class="fill" id="fill"></div></div><div class="note-card" id="staff"></div><div class="prompt">What is it?</div><div class="answers" id="answers"></div><div class="feedback" id="feedback"></div><button class="next" id="next" style="display:none">Next note →</button><div class="grownup-row"><button class="reset" id="reset" type="button">Reset progress</button><button class="reset" id="hideProgress" type="button">Hide progress</button></div></div><div class="panel mixpanel" id="mixPanel" hidden><div class="remote-bar" id="remoteBar" hidden><b>📱 Parent remote</b><span id="remoteStatus" class="rstatus"></span><button type="button" id="unpairPhone">Unpair</button></div><div class="kid-net" id="kidNet" hidden></div><div class="sizes" id="sizes"><button type="button" data-size="1">1 measure</button><button type="button" data-size="2">2 measures</button><button type="button" data-size="3">3 measures</button><button type="button" data-size="line">1 line</button></div><div class="mix-count" id="mixCount"></div><div class="sheet-card" id="sheetCard"><div class="mtag" id="mtag" hidden></div><canvas id="sheet" aria-label="Sheet music"></canvas></div><div class="parent-bar" id="parentBar" hidden><button type="button" class="play" id="playBtn">▶ Play</button><button type="button" id="stopBtn">■ Stop</button><label>Tempo <input type="range" id="tempo" min="40" max="132" step="2" value="100"><span id="tempoVal">100</span></label><button type="button" id="lockBtn">🔒 Lock</button><div class="pair-row" id="pairRow"><button type="button" id="pairOpen">📱 Pair a parent phone</button><span id="pairedNote" hidden></span><button type="button" id="unpairKid" hidden>Unpair</button></div><small id="audioNote">Only you can see this. No sound on iPad? Check the silent switch and volume.</small></div><div class="mix-done" id="mixDone"></div><div class="mix-nav"><button type="button" id="mixBack">← Back</button><button type="button" class="next" id="mixNext">Next →</button></div><button class="reset" id="mixRestart" type="button">Start over (new shuffle)</button></div><div class="pinwrap" id="pinWrap" hidden><div class="pinbox" id="pinBox"><h2 id="pinTitle">Grown-ups only</h2><p id="pinMsg"></p><div class="pindots" id="pinDots"><i></i><i></i><i></i><i></i></div><div class="pinpad" id="pinPad"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><span></span><button type="button">0</button><button type="button" data-k="del" aria-label="Delete">⌫</button></div><button type="button" class="cancel" id="pinCancel">Cancel</button><button type="button" class="cancel phone-link" id="pinPhone">📱 Set up this phone as the parent remote</button></div></div><div class="pinwrap" id="pairDlg" hidden><div class="pinbox"><h2>Pair a parent phone</h2><p>On your phone, open <b>tri8602-del.github.io/Musical_Memory/#parent</b> (or hold ⋯ and tap “Set up this phone as the parent remote”), then type:</p><div class="paircode" id="pairCode"></div><p id="pairWaitStatus"></p><button type="button" class="cancel" id="pairCancel">Cancel</button></div></div><div class="pinwrap" id="joinDlg" hidden><div class="pinbox"><h2>Parent phone</h2><p>Type the code shown on Maddy's iPad.</p><input id="joinCode" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="9" placeholder="ABCD-2345" aria-label="Pairing code"><p id="joinMsg"></p><button type="button" class="next" id="joinGo">Connect</button><button type="button" class="cancel" id="joinCancel">Cancel</button></div></div></div><script>
 "use strict";
 
 const CARDS=[{id:"treble_0",staff:"treble",image:"treble_0",sol:"Do",mnemonic:"Bunny Do",midi:60},{id:"treble_1",staff:"treble",image:"treble_1",sol:"Re",mnemonic:"Sticky Re",midi:62},{id:"treble_2",staff:"treble",image:"treble_2",sol:"Mi",mnemonic:"Cookie Mi",midi:64},{id:"treble_3",staff:"treble",image:"treble_3",sol:"Fa",mnemonic:"Balloon Fa",midi:65},{id:"treble_4",staff:"treble",image:"treble_4",sol:"Sol",mnemonic:"Marching Soldier",midi:67},{id:"treble_5",staff:"treble",image:"treble_5",sol:"La",mnemonic:"Princess La La",midi:69},{id:"treble_6",staff:"treble",image:"treble_6",sol:"Ti",mnemonic:"Bubble Ti",midi:71},{id:"treble_7",staff:"treble",image:"treble_7",sol:"Do",mnemonic:"Queen Do",midi:72},{id:"treble_8",staff:"treble",image:"treble_8",sol:"Re",mnemonic:"Cousin Re",midi:74},{id:"treble_9",staff:"treble",image:"treble_9",sol:"Mi",mnemonic:"Mi X",midi:76},{id:"treble_10",staff:"treble",image:"treble_10",sol:"Fa",mnemonic:"Father",midi:77},{id:"treble_11",staff:"treble",image:"treble_11",sol:"Sol",mnemonic:"General Soldier",midi:79},{id:"bass_0",staff:"bass",image:"bass_0",sol:"Do",mnemonic:"Bunny Do",midi:60},{id:"bass_1",staff:"bass",image:"bass_1",sol:"Ti",mnemonic:"Sitting Boy",midi:59},{id:"bass_2",staff:"bass",image:"bass_2",sol:"La",mnemonic:"Eiffel La",midi:57},{id:"bass_3",staff:"bass",image:"bass_3",sol:"Sol",mnemonic:"Sol Sausage",midi:55},{id:"bass_4",staff:"bass",image:"bass_4",sol:"Fa",mnemonic:"Fa Friends",midi:53},{id:"bass_5",staff:"bass",image:"bass_5",sol:"Mi",mnemonic:"Eyeball Mi",midi:52},{id:"bass_6",staff:"bass",image:"bass_6",sol:"Re",mnemonic:"Re Dog",midi:50},{id:"bass_7",staff:"bass",image:"bass_7",sol:"Do",mnemonic:"King Do",midi:48},{id:"bass_8",staff:"bass",image:"bass_8",sol:"Ti",mnemonic:"Baby Boy (Ti)",midi:47},{id:"bass_9",staff:"bass",image:"bass_9",sol:"La",mnemonic:"Mr. Bo La",midi:45},{id:"bass_10",staff:"bass",image:"bass_10",sol:"Sol",mnemonic:"Good Guy Sol",midi:43},{id:"treble_12",staff:"treble",image:"treble_12",sol:"La",mnemonic:"Candy La",midi:81},{id:"treble_13",staff:"treble",image:"treble_13",sol:"Ti",mnemonic:"Tea Cup",midi:83},{id:"treble_14",staff:"treble",image:"treble_14",sol:"Do",mnemonic:"Grandma Do",midi:84},{id:"bass_11",staff:"bass",image:"bass_11",sol:"Fa",mnemonic:"Hanging Fa",midi:41},{id:"bass_12",staff:"bass",image:"bass_12",sol:"Mi",mnemonic:"Mustache Mi",midi:40},{id:"bass_13",staff:"bass",image:"bass_13",sol:"Re",mnemonic:"Monkey Bar Re",midi:38},{id:"bass_14",staff:"bass",image:"bass_14",sol:"Do",mnemonic:"Grandpa Do",midi:36}];
@@ -617,7 +630,7 @@ function shuffled(len,avoidFirst){
   if(len>1&&o[0]===avoidFirst)[o[0],o[1]]=[o[1],o[0]];
   return o;
 }
-function mixSave(){localStorage.setItem(MIX_KEY,JSON.stringify({size:mix.size,order:mix.order,pos:mix.pos,round:mix.round}));}
+function mixSave(){if(window.pairPush)setTimeout(pairPush,0);if(window.isRemote&&isRemote())return;localStorage.setItem(MIX_KEY,JSON.stringify({size:mix.size,order:mix.order,pos:mix.pos,round:mix.round}));}
 function mixLoad(){
   try{const s=JSON.parse(localStorage.getItem(MIX_KEY)||"null");
     if(s&&["1","2","3","line"].includes(s.size)){const len=chunks(s.size).length;
@@ -658,8 +671,9 @@ function renderMix(){
   document.getElementById("mixBack").disabled=mix.pos===0;
   const tag=document.getElementById("mtag");
   tag.textContent=(c.length>1?"Measures "+c[0]+"–"+c[c.length-1]:"Measure "+c[0]);
-  tag.hidden=!mix.unlocked;
-  document.getElementById("parentBar").hidden=!mix.unlocked;
+  const pv=mix.unlocked||!!(window.isRemote&&isRemote());
+  tag.hidden=!pv;
+  document.getElementById("parentBar").hidden=!pv;
   drawSheet();
 }
 function mixNext(){
@@ -784,7 +798,7 @@ function scheduleEvents(ctx,dest,ev,t0){
 let playing=null;
 function bpm(){return +document.getElementById("tempo").value;}
 function startPlay(){
-  if(!mix.unlocked)return;
+  if(!mix.unlocked&&!(window.isRemote&&isRemote()))return;
   const ctx=getAudio();if(!ctx)return;
   Piano.load(ctx).then(()=>{
     stopPlay();
@@ -841,4 +855,222 @@ window.grownupHold=function(){if(!document.getElementById("mixPanel").hidden){if
 (function(){const t=localStorage.getItem("maddy-mix-tempo");if(t){document.getElementById("tempo").value=t;document.getElementById("tempoVal").textContent=t;}})();
 mixLoad();
 setMode(localStorage.getItem("maddy-mode")==="mix"?"mix":"notes");
+</script><script>
+"use strict";
+// ---- Parent phone: pair a phone as the remote for Mix Up the Measures ----
+// Shared realtime state lives in Firestore (the Territory Tracker project, its own collection
+// "mixRemote", one small document per pairing code). It holds only which chunk is showing:
+// sz/order/pos/round. Both devices sign in anonymously. Mix mode never waits on this: without
+// a connection everything keeps working on the device and catches up when it is back.
+const MM_FIREBASE_CONFIG={
+  apiKey:"AIzaSyDCRuAN_PM_bmVSHVl-kEsiszproydi7dA",
+  authDomain:"territory-tracker-e44f2.firebaseapp.com",
+  projectId:"territory-tracker-e44f2",
+  storageBucket:"territory-tracker-e44f2.firebasestorage.app",
+  messagingSenderId:"1084862266247",
+  appId:"1:1084862266247:web:1d0b2b03144b7502a57122"
+};
+const PAIR_KEY="maddy-parent-phone-v1", PAIR_COLL="mixRemote";
+const PAIR_ALPHA="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", PAIR_RE=/^[A-HJ-NP-Z2-9]{8}$/;
+const DEVICE_ID=(()=>{let d=localStorage.getItem("maddy-device-id");
+  if(!d){d="d"+Math.random().toString(36).slice(2,12);localStorage.setItem("maddy-device-id",d);}return d;})();
+const pair={info:null,db:null,unsub:null,connected:false,serverSeen:false,rev:0,sdk:null};
+try{pair.info=JSON.parse(localStorage.getItem(PAIR_KEY)||"null");}catch(e){}
+function pairRole(){return pair.info&&pair.info.joined?pair.info.role:null;}
+function isRemote(){return pairRole()==="parent";}
+function pairSaveInfo(){if(pair.info)localStorage.setItem(PAIR_KEY,JSON.stringify(pair.info));else localStorage.removeItem(PAIR_KEY);}
+function newPairCode(){const b=new Uint32Array(8);crypto.getRandomValues(b);return [...b].map(x=>PAIR_ALPHA[x%PAIR_ALPHA.length]).join("");}
+function fmtCode(c){return c.slice(0,4)+"-"+c.slice(4);}
+function cleanCode(v){return String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");}
+const $p=id=>document.getElementById(id);
+
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>rej(new Error("load "+src));document.head.appendChild(s);});}
+function withTimeout(p,ms){return Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timed out")),ms))]);}
+function pairFirebase(){
+  if(pair.sdk)return pair.sdk;
+  pair.sdk=(async()=>{
+    if(!window.firebase||!firebase.firestore){
+      await loadScript("vendor/firebase/firebase-app-compat.js");
+      await loadScript("vendor/firebase/firebase-auth-compat.js");
+      await loadScript("vendor/firebase/firebase-firestore-compat.js");
+    }
+    if(!firebase.apps.length)firebase.initializeApp(MM_FIREBASE_CONFIG);
+    pair.db=firebase.firestore();
+    const auth=firebase.auth();
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+    await new Promise(r=>{const u=auth.onAuthStateChanged(()=>{u();r();});});
+    if(!auth.currentUser)await withTimeout(auth.signInAnonymously(),20000);
+    return pair.db;
+  })();
+  pair.sdk.catch(()=>{pair.sdk=null;});
+  return pair.sdk;
+}
+function pairRef(code){return pair.db.collection(PAIR_COLL).doc(code);}
+function pairState(){return {sz:mix.size,order:mix.order.slice(),pos:mix.pos,round:mix.round,rev:++pair.rev,by:DEVICE_ID,v:1};}
+function sameState(d){return d.sz===mix.size&&d.pos===mix.pos&&d.round===mix.round&&JSON.stringify(d.order)===JSON.stringify(mix.order);}
+
+// Called by mixSave() whenever the shuffle, place or size changes on this device.
+window.pairPush=function(){
+  if(!pair.info||!pair.db)return;
+  pairRef(pair.info.code).set(pairState(),{merge:true}).catch(e=>console.warn("pair push",e&&e.code));
+};
+function adoptRemote(d){
+  if(!["1","2","3","line"].includes(d.sz)||!Array.isArray(d.order))return;
+  const len=chunks(d.sz).length;
+  if(d.order.length!==len||!(d.pos>=0&&d.pos<len))return;
+  const changed=!sameState(d), newRound=d.round>mix.round&&d.pos===0;
+  mix.size=d.sz;mix.order=d.order.slice();mix.pos=d.pos;mix.round=d.round||1;
+  if(typeof d.rev==="number")pair.rev=Math.max(pair.rev,d.rev);
+  if(changed){
+    if(typeof stopPlay==="function")stopPlay();
+    if(!isRemote())localStorage.setItem(MIX_KEY,JSON.stringify({size:mix.size,order:mix.order,pos:mix.pos,round:mix.round}));
+    $p("mixDone").textContent=newRound?"🎉 You played them all! Here's a new shuffle.":"";
+    if(!$p("mixPanel").hidden)renderMix();
+  }
+}
+function pairListen(){
+  if(pair.unsub){pair.unsub();pair.unsub=null;}
+  if(!pair.info||!pair.db)return;
+  const code=pair.info.code;
+  pair.unsub=pairRef(code).onSnapshot({includeMetadataChanges:true},snap=>{
+    if(!pair.info||pair.info.code!==code)return;
+    pair.serverSeen=!snap.metadata.fromCache;
+    if(!snap.exists){
+      if(!snap.metadata.fromCache)pairEnded(pair.info.joined?"The other device unpaired.":"That pairing code was cancelled.");
+      pairStatus();return;
+    }
+    const d=snap.data();
+    if(!pair.info.joined&&pair.info.role==="kid"&&d.parentAt){
+      pair.info.joined=true;pairSaveInfo();pairJoinedOnKid();
+    }
+    if(!snap.metadata.hasPendingWrites)adoptRemote(d);
+    pairStatus();
+  },err=>{console.warn("pair listen",err&&err.code);pair.serverSeen=false;pairStatus();});
+}
+async function pairConnect(){
+  if(!pair.info)return;
+  try{await pairFirebase();pairListen();}
+  catch(e){pair.serverSeen=false;pairStatus();}
+}
+function pairStatus(){
+  const online=navigator.onLine!==false, ok=online&&pair.serverSeen;
+  pair.connected=ok;
+  const role=pairRole();
+  // Phone remote banner
+  const rb=$p("remoteBar");
+  if(rb){rb.hidden=!(role==="parent");
+    $p("remoteStatus").textContent=ok?"● Connected to Maddy's iPad":"Not connected. Check the internet. Changes will sync when it's back.";
+    $p("remoteStatus").className="rstatus "+(ok?"ok":"off");}
+  // iPad: a plain note only when it can't reach the phone (no hint of sound)
+  const kn=$p("kidNet");
+  if(kn){kn.hidden=!(role==="kid"&&!ok);kn.textContent="Not connected to the internet. Practice still works.";}
+  // iPad parent view pairing row
+  const pr=$p("pairRow");
+  if(pr){
+    $p("pairOpen").hidden=!!pair.info;
+    $p("pairedNote").hidden=role!=="kid";
+    $p("pairedNote").textContent=role==="kid"?(ok?"📱 Paired with the parent phone":"📱 Paired (not connected right now)"):"";
+    $p("unpairKid").hidden=role!=="kid";
+  }
+  const ws=$p("pairWaitStatus");
+  if(ws&&!$p("pairDlg").hidden&&pair.info&&!pair.info.joined)
+    ws.textContent=ok?"Waiting for the phone…":"Not connected. Connect the iPad to the internet to pair.";
+  document.body.classList.toggle("remote-phone",role==="parent");
+  if(typeof updateRemoteUI==="function")updateRemoteUI();
+}
+
+// ---- iPad side: show a code ----
+async function pairStartOnKid(){
+  stopPlay();
+  if(navigator.onLine===false){$p("pairCode").textContent="";$p("pairDlg").hidden=false;
+    $p("pairWaitStatus").textContent="Not connected. Connect the iPad to the internet to pair.";return;}
+  const code=newPairCode();
+  pair.info={code,role:"kid",joined:false};pairSaveInfo();
+  $p("pairCode").textContent=fmtCode(code);$p("pairDlg").hidden=false;
+  $p("pairWaitStatus").textContent="Connecting…";
+  try{
+    await pairFirebase();
+    await withTimeout(pairRef(code).set(Object.assign(pairState(),{kidAt:firebase.firestore.FieldValue.serverTimestamp()})),15000);
+    pairListen();pairStatus();
+  }catch(e){
+    $p("pairWaitStatus").textContent=navigator.onLine===false?"Not connected. Connect the iPad to the internet to pair.":"Couldn't reach the pairing service. Try again in a moment.";
+    pair.info=null;pairSaveInfo();
+  }
+}
+function pairCancelOnKid(){
+  const info=pair.info;$p("pairDlg").hidden=true;
+  if(info&&!info.joined){pair.info=null;pairSaveInfo();if(pair.unsub){pair.unsub();pair.unsub=null;}
+    if(pair.db)pairRef(info.code).delete().catch(()=>{});}
+  pairStatus();
+}
+function pairJoinedOnKid(){
+  $p("pairWaitStatus").textContent="Paired! ✓ Sound and controls are now on the phone.";
+  setTimeout(()=>{$p("pairDlg").hidden=true;lockParent();pairStatus();},1500);
+}
+
+// ---- Phone side: enter the code ----
+function openJoin(){
+  if(typeof closePin==="function")closePin();
+  $p("joinDlg").hidden=false;$p("joinMsg").textContent="";$p("joinCode").value="";
+  setTimeout(()=>$p("joinCode").focus(),50);
+}
+async function joinSubmit(){
+  const code=cleanCode($p("joinCode").value), msg=$p("joinMsg");
+  if(!PAIR_RE.test(code)){msg.textContent="The code is 8 letters and numbers, like ABCD-2345.";return;}
+  if(navigator.onLine===false){msg.textContent="Not connected. Connect this phone to the internet first.";return;}
+  msg.textContent="Connecting…";$p("joinGo").disabled=true;
+  try{
+    await pairFirebase();
+    const snap=await withTimeout(pairRef(code).get(),15000);
+    if(!snap.exists){msg.textContent="No iPad is waiting with that code. Check it and try again.";return;}
+    await withTimeout(pairRef(code).update({parentAt:firebase.firestore.FieldValue.serverTimestamp()}),15000);
+    pair.info={code,role:"parent",joined:true};pairSaveInfo();
+    adoptRemote(snap.data());
+    $p("joinDlg").hidden=true;
+    setMode("mix");pairListen();pairStatus();Piano.load();renderMix();
+  }catch(e){msg.textContent=navigator.onLine===false?"Not connected. Connect this phone to the internet first.":"Couldn't connect. Check the code and the internet, then try again.";}
+  finally{$p("joinGo").disabled=false;}
+}
+
+// ---- Either side: unpair ----
+function pairEnded(note){
+  if(pair.unsub){pair.unsub();pair.unsub=null;}
+  const wasParent=isRemote();
+  pair.info=null;pairSaveInfo();pair.serverSeen=false;
+  if(wasParent){stopPlay();mixLoad();}
+  $p("pairDlg").hidden=true;
+  if(!$p("mixPanel").hidden)renderMix();
+  pairStatus();
+  if(note){const d=$p("mixDone");d.textContent=wasParent?note:"";}
+}
+function unpair(){
+  if(!confirm("Unpair the parent phone?"))return;
+  const info=pair.info;
+  if(info&&pair.db)pairRef(info.code).delete().catch(()=>{});
+  pairEnded(null);
+}
+
+// ---- Wire up ----
+$p("pairOpen").addEventListener("click",pairStartOnKid);
+$p("pairCancel").addEventListener("click",pairCancelOnKid);
+$p("unpairKid").addEventListener("click",unpair);
+$p("unpairPhone").addEventListener("click",unpair);
+$p("pinPhone").addEventListener("click",openJoin);
+$p("joinGo").addEventListener("click",joinSubmit);
+$p("joinCode").addEventListener("input",()=>{$p("joinMsg").textContent="";});
+$p("joinCode").addEventListener("keydown",e=>{if(e.key==="Enter")joinSubmit();});
+$p("joinCancel").addEventListener("click",()=>{$p("joinDlg").hidden=true;});
+addEventListener("online",()=>{pairStatus();if(pair.info&&!pair.db)pairConnect();});
+addEventListener("offline",()=>{pair.serverSeen=false;pairStatus();});
+if(pair.info&&!pair.info.joined){pair.info=null;pairSaveInfo();}  // a code that was never used
+if(pair.info){if(isRemote())setMode("mix");pairConnect();if(isRemote())Piano.load();}
+if(location.hash==="#parent"&&!pair.info)openJoin();
+pairStatus();
+function updateRemoteUI(){
+  const r=isRemote();
+  const lb=$p("lockBtn");if(lb)lb.hidden=r;
+  const pr=$p("pairRow");if(pr)pr.hidden=r;
+  const an=$p("audioNote");if(an)an.textContent=r?"This phone plays the sound. Maddy's iPad shows the music only. No sound? Check the silent switch and volume.":"Only you can see this. No sound on iPad? Check the silent switch and volume.";
+  if(!$p("mixPanel").hidden&&typeof renderMix==="function"&&r!==updateRemoteUI.last){updateRemoteUI.last=r;renderMix();}
+}
 </script></body></html>

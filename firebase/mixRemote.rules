@@ -1,0 +1,21 @@
+// Add this block to the Territory Tracker project's Firestore rules
+// (Firebase console → territory-tracker-e44f2 → Firestore Database → Rules), inside
+//   match /databases/{database}/documents { ... }
+// next to the existing Territory Tracker rules. Leave those rules as they are, then click Publish.
+// It lets the Musical Memory parent-phone pairing use its own "mixRemote" collection.
+// Each document holds only which sheet-music chunk is showing (no names or personal data).
+    match /mixRemote/{code} {
+      function okCode() { return code.matches('^[A-HJ-NP-Z2-9]{8}$'); }
+      function okData(d) {
+        return d.keys().hasOnly(['sz','order','pos','round','rev','by','v','kidAt','parentAt'])
+          && d.sz in ['1','2','3','line']
+          && d.order is list && d.order.size() <= 40
+          && d.pos is int && d.pos >= 0 && d.pos < 40
+          && d.round is int && d.rev is int
+          && d.by is string && d.by.size() <= 40;
+      }
+      allow get: if request.auth != null && okCode();
+      allow list: if false;
+      allow create, update: if request.auth != null && okCode() && okData(request.resource.data);
+      allow delete: if request.auth != null && okCode();
+    }
