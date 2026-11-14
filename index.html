@@ -997,8 +997,24 @@ function pairFirebase(){
   return pair.sdk;
 }
 function pairRef(code){return pair.db.collection(PAIR_COLL).doc(code);}
-function pairState(){return {sz:mix.size,order:mix.order.slice(),pos:mix.pos,round:mix.round,rev:++pair.rev,by:DEVICE_ID,v:1};}
-function sameState(d){return d.sz===mix.size&&d.pos===mix.pos&&d.round===mix.round&&JSON.stringify(d.order)===JSON.stringify(mix.order);}
+// The published production rules only allow sz in ['1','2','3','line'] (not 'song')
+// and Check me marks of at most 64 characters. Whole song is sent as v=2 with a
+// legal line-sized payload so a selection is never rejected and rolled back.
+const WIRE_SONG=2;
+function lineOrder(){return [...Array(chunks("line").length).keys()];}
+function pairState(){
+  const rev=++pair.rev;
+  if(mix.size==="song")return {sz:"line",order:lineOrder(),pos:0,round:mix.round,rev,by:DEVICE_ID,v:WIRE_SONG};
+  return {sz:mix.size,order:mix.order.slice(),pos:mix.pos,round:mix.round,rev,by:DEVICE_ID,v:1};
+}
+function fromWire(d){
+  if(d&&d.v===WIRE_SONG)return Object.assign({},d,{sz:"song",order:[0],pos:0});
+  return d;
+}
+function sameState(d){
+  const s=fromWire(d);
+  return s.sz===mix.size&&s.pos===mix.pos&&s.round===mix.round&&JSON.stringify(s.order)===JSON.stringify(mix.order);
+}
 
 // Called by mixSave() whenever the shuffle, place or size changes on this device.
 window.pairPush=function(){
@@ -1006,6 +1022,9 @@ window.pairPush=function(){
   pairRef(pair.info.code).set(pairState(),{merge:true}).catch(e=>console.warn("pair push",e&&e.code));
 };
 function adoptRemote(d){
+  // A rejected write (or a stale snapshot) must never clobber a newer local choice.
+  if(typeof d.rev==="number"&&d.rev<pair.rev)return;
+  d=fromWire(d);
   if(!validSize(d.sz)||!Array.isArray(d.order))return;
   const len=chunks(d.sz).length;
   if(d.order.length!==len||!(d.pos>=0&&d.pos<len))return;
@@ -1380,7 +1399,12 @@ function checkSummary(){
 function pushCheck(){
   if(practiceMode()!=="both"||!pair.info||!pair.info.joined||!pair.db)return;
   const st=chk.state==="listening"?"listening":chk.follower?(chk.follower.done()?"done":"stopped"):"idle";
-  const data={st,key:chk.key||chunkKey(),marks:chk.follower?chk.follower.marks.join(""):""};
+  const marks=chk.follower?chk.follower.marks.join(""):"";
+  // Published rules cap marks at 64 characters (the whole song has 232). Skip rather
+  // than send a write that would be rejected; chunk sync is a separate update.
+  if(marks.length>64)return;
+  const key=(chk.key||chunkKey()).slice(0,16);
+  const data={st,key,marks};
   // A separate update, so the chunk sync keeps working even where this field isn't allowed yet.
   pairRef(pair.info.code).update({chk:data}).catch(e=>console.warn("check push",e&&e.code));
 }
