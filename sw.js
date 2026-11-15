@@ -1,11 +1,12 @@
 // Offline support for Maddy's Do-Re-Mi Trainer.
 // Bump VERSION when shipping changes; old caches are deleted on activate.
-const VERSION = "v7";
+const VERSION = "v8";
 const CACHE = "maddy-musical-memory-" + VERSION;
 const PIANO = ["Fs3","A3","C4","Ds4","Fs4","A4","C5","Ds5","Fs5","A5","C6","Ds6","Fs6","A6","C7"].map(n => "./piano/" + n + ".mp3");
 const SHEET = [1,2,3,4,5,6,7,8].map(n => "./music/handel/line" + n + ".png");
 const FIREBASE = ["app","auth","firestore"].map(n => "./vendor/firebase/firebase-" + n + "-compat.js");
-const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./checkme-worklet.js", ...SHEET, ...PIANO, ...FIREBASE];
+const QR = ["./vendor/qrcode-generator/qrcode.js"];
+const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./checkme-worklet.js", ...SHEET, ...PIANO, ...FIREBASE, ...QR];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, {cache: "reload"})))).then(() => self.skipWaiting()));
